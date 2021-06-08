@@ -42,7 +42,8 @@ def project_init(project_name: str, author: str="",
     for filename in os.listdir(join(project_name, "app")):
         if not filename.endswith('.py'):
             continue
-        init_pyfile(join(project_name, 'app', filename), author)
+        if not init_pyfile(join(project_name, 'app', filename), author):
+            raise Exception('init python file error: '+)
 
 
 def module_add(module_name: str, prefix: str=None, tags: str=None):
