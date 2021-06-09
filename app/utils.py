@@ -20,6 +20,6 @@ def init_pyfile(path: str, author: str, replaces: Dict[str, str]=None) -> bool:
         for key, val in replaces.items():
             text = text.replace(key, val)
         
-    with open(path, 'w', encoding='utf8') as f:
+    with open(path, 'w', encoding='utf8', newline='') as f:
         f.write(text)
     return True

@@ -61,6 +61,7 @@ setup(
                                     os.path.join('data', '*'),
                                     os.path.join('module', '*'),
                                     os.path.join('project', '*'),
+                                    os.path.join('project', 'common', '*'),
                                     ]},
     entry_points={      # 安装命令
         "console_scripts": [

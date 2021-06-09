@@ -3,19 +3,20 @@
 ## 安装
 
 ```sh
-easy_install .
+# linux
+sudo -H pip3 install -r https://github.com/ibbd-dev/fastapi-start/raw/main/requirements.txt
+sudo -H pip3 install git+https://github.com/ibbd-dev/fastapi-start.git
+
+# windows
+pip install -r https://github.com/ibbd-dev/fastapi-start/raw/main/requirements.txt
+pip install git+https://github.com/ibbd-dev/fastapi-start.git
 ```
 
 OR
 
 ```sh
-# linux
-sudo -H pip3 install -r https://github.com/ibbd-dev/fastapi-start/raw/master/requirements.txt
-sudo -H pip3 install git+https://github.com/ibbd-dev/fastapi-start.git
-
-# windows
-pip install -r https://github.com/ibbd-dev/fastapi-start/raw/master/requirements.txt
-pip install git+https://github.com/ibbd-dev/fastapi-start.git
+# 源码安装
+easy_install .
 ```
 
 ## 使用
@@ -36,7 +37,7 @@ cd test/app
 
 # 添加一个模块
 # test是模块名称，可以设定
-# --prefix: 模块的路由前缀
+# --prefix: 模块的路由前缀（如果没有指定，则可以在router.py文件中进行修改
 # --tags: 模块的标签（展示在交互式接口文档上）
 fastapi-start module-add test --prefix=/test --tags=测试
 
@@ -67,8 +68,8 @@ fastapi-start file-add filename
 │   │   ├── __init__.py
 │   └── module_name              # 模块目录，每个模块独立成一个目录
 │       ├── __init__.py
-│       ├── rule.py              # 模块路由文件
-│       └── rule_settings.py     # 路由文件配置
+│       ├── router.py            # 模块路由文件
+│       └── router_settings.py   # 路由文件配置
 ├── .vscode                      # vscode配置
 │   ├── settings.json
 ├── .gitignore

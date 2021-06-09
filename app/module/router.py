@@ -7,8 +7,6 @@ from fastapi import APIRouter
 # from fastapi import Depends, HTTPException
 
 router = APIRouter(
-    prefix="__prefix__",
-    tags=["__tags__"],
     # dependencies=[Depends(get_token_header)],
     # responses={404: {"description": "Not found"}},
 )
