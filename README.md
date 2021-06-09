@@ -32,8 +32,16 @@ fastapi-start config caiyy
 # --title and --desc: 项目的标题及描述
 fastapi-start project-init test --title=测试项目 --desc=这是一个测试项目
 
+# 项目根目录
+cd test
+
+# 启动http服务
+uvicorn main:app --reload --host 0.0.0.0
+# 在浏览器打开：http://127.0.0.1:8000/docs#/
+# 查看接口文档
+
 # 项目代码目录
-cd test/app
+cd app
 
 # 添加一个模块
 # test是模块名称，可以设定

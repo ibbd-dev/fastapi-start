@@ -80,7 +80,16 @@ def project_init(project_name: str, title: str=None, desc: str=""):
     os.mkdir(dst_path)
     with open(join(dst_path, "readme.md"), 'w', encoding='utf8', newline='') as f:
         f.write(f"# {title}\n{desc}")
+    for filename in os.listdir(src_path):
+        if not filename.endswith('.py'):
+            continue
+        shutil.copyfile(join(src_path, filename), join(dst_path, filename))
+        if not init_pyfile(join(dst_path, filename), cfg['author']):
+            raise Exception('init python file error: '+ join(dst_path, filename))
 
+    src_path = join(src_path, 'common')
+    dst_path = join(dst_path, 'common')
+    os.mkdir(dst_path)
     for filename in os.listdir(src_path):
         if not filename.endswith('.py'):
             continue
