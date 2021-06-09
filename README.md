@@ -18,6 +18,32 @@ pip install -r https://github.com/ibbd-dev/fastapi-start/raw/master/requirements
 pip install git+https://github.com/ibbd-dev/fastapi-start.git
 ```
 
+## 使用
+
+安装成功之后，会有一个命令`fastapi-start`
+
+```sh
+# 初次使用时，首先配置用户名
+fastapi-start config caiyy
+
+# 项目初始化
+# test是项目名称，可以指定为自己的项目名称
+# --title and --desc: 项目的标题及描述
+fastapi-start project-init test --title=测试项目 --desc=这是一个测试项目
+
+# 项目代码目录
+cd test/app
+
+# 添加一个模块
+# test是模块名称，可以设定
+# --prefix: 模块的路由前缀
+# --tags: 模块的标签（展示在交互式接口文档上）
+fastapi-start module-add test --prefix=/test --tags=测试
+
+# 在当前目录增加一个python文件
+fastapi-start file-add filename
+```
+
 ## 基于FastAPI的大中型项目应该具备
 
 - 函数的参数和返回值必须要有明确的参数类型定义。
