@@ -3,19 +3,20 @@
 ## 安装
 
 ```sh
-easy_install .
+# linux
+sudo -H pip3 install -r https://github.com/ibbd-dev/fastapi-start/raw/main/requirements.txt
+sudo -H pip3 install git+https://github.com/ibbd-dev/fastapi-start.git
+
+# windows
+pip install -r https://github.com/ibbd-dev/fastapi-start/raw/main/requirements.txt
+pip install git+https://github.com/ibbd-dev/fastapi-start.git
 ```
 
 OR
 
 ```sh
-# linux
-sudo -H pip3 install -r https://github.com/ibbd-dev/fastapi-start/raw/master/requirements.txt
-sudo -H pip3 install git+https://github.com/ibbd-dev/fastapi-start.git
-
-# windows
-pip install -r https://github.com/ibbd-dev/fastapi-start/raw/master/requirements.txt
-pip install git+https://github.com/ibbd-dev/fastapi-start.git
+# 源码安装
+easy_install .
 ```
 
 ## 使用
@@ -31,12 +32,20 @@ fastapi-start config caiyy
 # --title and --desc: 项目的标题及描述
 fastapi-start project-init test --title=测试项目 --desc=这是一个测试项目
 
+# 项目根目录
+cd test
+
+# 启动http服务
+uvicorn main:app --reload --host 0.0.0.0
+# 在浏览器打开：http://127.0.0.1:8000/docs#/
+# 查看接口文档
+
 # 项目代码目录
-cd test/app
+cd app
 
 # 添加一个模块
 # test是模块名称，可以设定
-# --prefix: 模块的路由前缀
+# --prefix: 模块的路由前缀（如果没有指定，则可以在router.py文件中进行修改
 # --tags: 模块的标签（展示在交互式接口文档上）
 fastapi-start module-add test --prefix=/test --tags=测试
 
@@ -67,8 +76,8 @@ fastapi-start file-add filename
 │   │   ├── __init__.py
 │   └── module_name              # 模块目录，每个模块独立成一个目录
 │       ├── __init__.py
-│       ├── rule.py              # 模块路由文件
-│       └── rule_settings.py     # 路由文件配置
+│       ├── router.py            # 模块路由文件
+│       └── router_settings.py   # 路由文件配置
 ├── .vscode                      # vscode配置
 │   ├── settings.json
 ├── .gitignore

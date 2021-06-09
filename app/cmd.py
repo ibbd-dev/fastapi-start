@@ -19,7 +19,7 @@ def config(author: str):
     """配置用户名等信息
     :param author str: 用户名
     """
-    with open(config_file, 'w', encoding='utf8') as f:
+    with open(config_file, 'w', encoding='utf8', newline='') as f:
         data = {'author': author}
         json.dump(data, f)
 
@@ -52,24 +52,24 @@ def project_init(project_name: str, title: str=None, desc: str=""):
     if title is None:
         title = project_name
     
-    # vscode, gitignore, dockerfile
+    # vscode, gitignore, Dockerfile
     cfg = get_config()
-    print('parse vscode settings, dockerfile and gitignore...')
+    print('parse vscode settings, Dockerfile and gitignore...')
     os.mkdir(join(project_name, ".vscode"))
     shutil.copyfile(join(package_path, 'data', 'vscode_settings.json'), 
                     join(project_name, ".vscode", "settings.json"))
     shutil.copyfile(join(package_path, 'data', 'gitignore'), 
                     join(project_name, ".gitignone"))
-    shutil.copyfile(join(package_path, 'data', 'dockerfile'), 
-                    join(project_name, 'dockerfile'))
-    init_pyfile(join(project_name, 'dockerfile'), cfg['author'])
+    shutil.copyfile(join(package_path, 'data', 'Dockerfile'), 
+                    join(project_name, 'Dockerfile'))
+    init_pyfile(join(project_name, 'Dockerfile'), cfg['author'])
     print('--> ok.')
 
     # 生成md文件
     print('create md file...')
-    with open(join(project_name, "README.md"), 'w', encoding='utf8') as f:
+    with open(join(project_name, "README.md"), 'w', encoding='utf8', newline='') as f:
         f.write(f"# {title}\n{desc}")
-    with open(join(project_name, "install.md"), 'w', encoding='utf8') as f:
+    with open(join(project_name, "install.md"), 'w', encoding='utf8', newline='') as f:
         f.write(f"# {title}: 安装部署与运维文档")
     print('--> ok.')
     
@@ -78,9 +78,18 @@ def project_init(project_name: str, title: str=None, desc: str=""):
     src_path = join(package_path, 'project')
     dst_path = join(project_name, 'app')
     os.mkdir(dst_path)
-    with open(join(dst_path, "readme.md"), 'w', encoding='utf8') as f:
+    with open(join(dst_path, "readme.md"), 'w', encoding='utf8', newline='') as f:
         f.write(f"# {title}\n{desc}")
+    for filename in os.listdir(src_path):
+        if not filename.endswith('.py'):
+            continue
+        shutil.copyfile(join(src_path, filename), join(dst_path, filename))
+        if not init_pyfile(join(dst_path, filename), cfg['author']):
+            raise Exception('init python file error: '+ join(dst_path, filename))
 
+    src_path = join(src_path, 'common')
+    dst_path = join(dst_path, 'common')
+    os.mkdir(dst_path)
     for filename in os.listdir(src_path):
         if not filename.endswith('.py'):
             continue
@@ -91,11 +100,9 @@ def project_init(project_name: str, title: str=None, desc: str=""):
     print(f'init project: {project_name} ok.')
 
 
-def module_add(module_name: str, prefix: str=None, tags: str=None):
+def module_add(module_name: str):
     """增加模块（应该在项目的app目录下执行）
     :param module_name str: 模块名
-    :param prefix str: 模块的路由前缀
-    :param tags str: 模块的tags（展示在交互式文档中）
     """
     name_pattern = '^[a-z0-9_]{4,20}$'
     if re.match(name_pattern, module_name):
@@ -107,11 +114,6 @@ def module_add(module_name: str, prefix: str=None, tags: str=None):
     cfg = get_config()
     project_path = os.path.dirname(os.path.realpath(__file__))
 
-    replaces = {}
-    if prefix is not None:
-        replaces['__prefix__'] = prefix
-    if tags is not None:
-        replaces['__tags__'] = tags
     print('copy and parse app files...')
     src_path = join(project_path, 'module')
     os.mkdir(module_name)
@@ -119,7 +121,7 @@ def module_add(module_name: str, prefix: str=None, tags: str=None):
         if not filename.endswith('.py'):
             continue
         shutil.copyfile(join(src_path, filename), join(module_name, filename))
-        if not init_pyfile(join(module_name, filename), cfg['author'], replaces=replaces):
+        if not init_pyfile(join(module_name, filename), cfg['author']):
             raise Exception('init python file error: '+ join(module_name, filename))
     print('--> ok.')
     print(f'init module: {module_name} ok.')

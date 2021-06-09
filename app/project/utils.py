@@ -11,8 +11,8 @@ def parse_readme(filename: str='readme.md'):
     :return title str: 标题
     :return text  str: 文档内容
     """
-    with open(filename) as r:
+    with open(filename, encoding='utf8') as r:
         text = r.readlines()
-        title = text[0].strip('# \n').strip()
-        text = ''.join(text[1:]).strip()
+    title = text[0].strip('# \n').strip()
+    text = ''.join(text[1:]).strip()
     return title, text
