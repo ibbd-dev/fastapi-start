@@ -52,13 +52,17 @@ def project_init(project_name: str, title: str=None, desc: str=""):
     if title is None:
         title = project_name
     
-    # vscode
-    print('parse vscode settings and gitignore...')
+    # vscode, gitignore, dockerfile
+    cfg = get_config()
+    print('parse vscode settings, dockerfile and gitignore...')
     os.mkdir(join(project_name, ".vscode"))
-    shutil.copy(join(package_path, 'data', 'vscode_settings.json'), 
-                join(project_name, ".vscode"))
-    shutil.copy(join(package_path, 'data', 'gitignore'), 
-                join(project_name, ".gitignone"))
+    shutil.copyfile(join(package_path, 'data', 'vscode_settings.json'), 
+                    join(project_name, ".vscode", "settings.json"))
+    shutil.copyfile(join(package_path, 'data', 'gitignore'), 
+                    join(project_name, ".gitignone"))
+    shutil.copyfile(join(package_path, 'data', 'dockerfile'), 
+                    join(project_name, 'dockerfile'))
+    init_pyfile(join(project_name, 'dockerfile'), cfg['author'])
     print('--> ok.')
 
     # 生成md文件
@@ -70,7 +74,6 @@ def project_init(project_name: str, title: str=None, desc: str=""):
     print('--> ok.')
     
     # 复制app目录
-    cfg = get_config()
     print('copy and parse app files...')
     src_path = join(package_path, 'project')
     dst_path = join(project_name, 'app')

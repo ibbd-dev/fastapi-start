@@ -6,6 +6,18 @@
 easy_install .
 ```
 
+OR
+
+```sh
+# linux
+sudo -H pip3 install -r https://github.com/ibbd-dev/fastapi-start/raw/master/requirements.txt
+sudo -H pip3 install git+https://github.com/ibbd-dev/fastapi-start.git
+
+# windows
+pip install -r https://github.com/ibbd-dev/fastapi-start/raw/master/requirements.txt
+pip install git+https://github.com/ibbd-dev/fastapi-start.git
+```
+
 ## 基于FastAPI的大中型项目应该具备
 
 - 函数的参数和返回值必须要有明确的参数类型定义。
