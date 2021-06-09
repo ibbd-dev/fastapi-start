@@ -16,22 +16,30 @@ config_file = join(package_path, 'config.json')
 
 
 def config(author: str):
-    """配置"""
+    """配置用户名等信息
+    :param author str: 用户名
+    """
     with open(config_file, 'w', encoding='utf8') as f:
         data = {'author': author}
         json.dump(data, f)
 
 
 def get_config() -> Dict[str, str]:
+    if not os.path.isfile(config_file):
+        raise Exception("需要先设置用户名，帮助文档:\n    fastapi-start config --help")
     with open(config_file, encoding='utf8') as f:
         data = json.load(f)
-    if 'author' not in data:
-        data['author'] = ''
+    if 'author' not in data or data['author'] == '':
+        raise Exception("需要先设置用户名，帮助文档:\n    fastapi-start config --help")
     return data
 
 
 def project_init(project_name: str, title: str=None, desc: str=""):
-    """项目初始化"""
+    """项目初始化
+    :param project_name str: 项目名（目录名）
+    :param title str: 项目标题（显示在交互式文档中）
+    :param desc str: 项目描述（显示在交互式文档中）
+    """
     # 创建项目目录
     name_pattern = '^[a-z0-9\-]{4,20}$'
     if re.match(name_pattern, project_name):
@@ -64,18 +72,28 @@ def project_init(project_name: str, title: str=None, desc: str=""):
     # 复制app目录
     cfg = get_config()
     print('copy and parse app files...')
-    shutil.copy(join(package_path, 'app'), project_name)
-    for filename in os.listdir(join(project_name, "app")):
+    src_path = join(package_path, 'project')
+    dst_path = join(project_name, 'app')
+    os.mkdir(dst_path)
+    with open(join(dst_path, "readme.md"), 'w', encoding='utf8') as f:
+        f.write(f"# {title}\n{desc}")
+
+    for filename in os.listdir(src_path):
         if not filename.endswith('.py'):
             continue
-        if not init_pyfile(join(project_name, 'app', filename), cfg['author']):
-            raise Exception('init python file error: '+ join('app', filename))
+        shutil.copyfile(join(src_path, filename), join(dst_path, filename))
+        if not init_pyfile(join(dst_path, filename), cfg['author']):
+            raise Exception('init python file error: '+ join(dst_path, filename))
     print('--> ok.')
     print(f'init project: {project_name} ok.')
 
 
 def module_add(module_name: str, prefix: str=None, tags: str=None):
-    """增加模块"""
+    """增加模块（应该在项目的app目录下执行）
+    :param module_name str: 模块名
+    :param prefix str: 模块的路由前缀
+    :param tags str: 模块的tags（展示在交互式文档中）
+    """
     name_pattern = '^[a-z0-9_]{4,20}$'
     if re.match(name_pattern, module_name):
         print("module name check ok")
@@ -85,12 +103,20 @@ def module_add(module_name: str, prefix: str=None, tags: str=None):
         raise Exception(f'module name: {module_name} is existed!')
     cfg = get_config()
     project_path = os.path.dirname(os.path.realpath(__file__))
+
+    replaces = {}
+    if prefix is not None:
+        replaces['__prefix__'] = prefix
+    if tags is not None:
+        replaces['__tags__'] = tags
     print('copy and parse app files...')
-    shutil.copy(join(project_path, 'module'), module_name)
-    for filename in os.listdir(module_name):
+    src_path = join(project_path, 'module')
+    os.mkdir(module_name)
+    for filename in os.listdir(src_path):
         if not filename.endswith('.py'):
             continue
-        if not init_pyfile(join(module_name, filename), cfg['author']):
+        shutil.copyfile(join(src_path, filename), join(module_name, filename))
+        if not init_pyfile(join(module_name, filename), cfg['author'], replaces=replaces):
             raise Exception('init python file error: '+ join(module_name, filename))
     print('--> ok.')
     print(f'init module: {module_name} ok.')
@@ -109,7 +135,7 @@ def py_file_add(filename: str):
 
     print('create file...')
     src_path = os.path.dirname(os.path.realpath(__file__))
-    shutil.copy(join(src_path, 'data', 'example.py'), filename)
+    shutil.copyfile(join(src_path, 'data', 'example.py'), filename)
     cfg = get_config()
     init_pyfile(filename, cfg['author'])
     print('--> ok.')
