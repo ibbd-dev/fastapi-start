@@ -2,7 +2,9 @@
 #
 # 模块路由文件
 # Author: __author__
+# Email: __email__
 # Created Time: __created_time__
+from typing import Dict
 from fastapi import APIRouter
 # from fastapi import Depends, HTTPException
 
@@ -12,9 +14,7 @@ router = APIRouter(
 )
 
 
-# 接口样例
-"""
 @router.get("/")
-async def test_api():
+async def test_api() -> Dict[str, str]:
+    """模块测试API"""
     return {'message': 'ok'}
-"""

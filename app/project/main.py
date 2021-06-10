@@ -2,6 +2,7 @@
 #
 # 全局入口文件
 # Author: __author__
+# Email: __email__
 # Created Time: __created_time__
 from typing import Dict
 from fastapi import FastAPI
@@ -40,4 +41,5 @@ app.add_middleware(
 
 @app.get("/version", summary='获取系统版本号')
 async def version_api() -> Dict[str, str]:
+    """获取系统版本号"""
     return {"version": version}

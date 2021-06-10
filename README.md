@@ -24,8 +24,12 @@ easy_install .
 安装成功之后，会有一个命令`fastapi-start`
 
 ```sh
-# 初次使用时，首先配置用户名
-fastapi-start config caiyy
+# 初次使用时，首先配置用户名及email
+# 如果不设置，则自动使用git中的配置user.name及user.email
+fastapi-start config caiyy caiyy@ibbd.net
+
+# 查看配置的用户名及email
+fastapi-start config-get
 
 # 项目初始化
 # test是项目名称，可以指定为自己的项目名称
@@ -33,19 +37,17 @@ fastapi-start config caiyy
 fastapi-start project-init test --title=测试项目 --desc=这是一个测试项目
 
 # 项目根目录
-cd test
+# 项目代码目录
+cd test/app
 
 # 启动http服务
 uvicorn main:app --reload --host 0.0.0.0
 # 在浏览器打开：http://127.0.0.1:8000/docs#/
 # 查看接口文档
 
-# 项目代码目录
-cd app
-
 # 添加一个模块
-# test是模块名称，可以设定
-fastapi-start module-add test
+# module是模块名称，可以设定
+fastapi-start module-add module
 
 # 添加模块之后，要使模块生效，需要手动在app/main.py文件中注册该路由
 # prefix: 该参数定义路由的前缀，每个模块的路由前缀必须是唯一的
@@ -93,7 +95,7 @@ fastapi-start version
 │   └── module_name              # 模块目录，每个模块独立成一个目录
 │       ├── __init__.py
 │       ├── router.py            # 模块路由文件
-│       └── router_settings.py   # 路由文件配置
+│       └── schema.py            # 路由文件配置
 ├── .vscode                      # vscode配置
 │   ├── settings.json
 ├── .gitignore
