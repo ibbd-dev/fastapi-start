@@ -34,7 +34,8 @@ app.add_middleware(
 """
 
 # 加载模块路由
-# app.include_router(router, prefix="/module", tags=["module"])
+# from module.router import router as module_router
+# app.include_router(module_router, prefix="/module", tags=["module"])
 
 
 @app.get("/version", summary='获取系统版本号')

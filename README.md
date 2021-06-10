@@ -45,12 +45,28 @@ cd app
 
 # 添加一个模块
 # test是模块名称，可以设定
-# --prefix: 模块的路由前缀（如果没有指定，则可以在router.py文件中进行修改
-# --tags: 模块的标签（展示在交互式接口文档上）
-fastapi-start module-add test --prefix=/test --tags=测试
+fastapi-start module-add test
+
+# 添加模块之后，要使模块生效，需要手动在app/main.py文件中注册该路由
+# prefix: 该参数定义路由的前缀，每个模块的路由前缀必须是唯一的
+from module.router import router as module_router
+app.include_router(module_router, prefix="/module", tags=["测试模块"])
 
 # 在当前目录增加一个python文件
 fastapi-start file-add filename
+```
+
+### fastapi-start帮助文档
+
+```sh
+# 显示所有帮助文档
+fastapi-start
+
+# 某个命令的帮助文档
+fastapi-start project-init --help
+
+# 查看版本号
+fastapi-start version
 ```
 
 ## 基于FastAPI的大中型项目应该具备

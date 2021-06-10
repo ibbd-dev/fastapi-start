@@ -13,9 +13,9 @@ RUN apt-get update -y \
     && rm -r /var/lib/apt/lists/* 
 
 # install fastapi
-RUN pip3 --no-cache-dir install \
-        requests \
-        fastapi uvicorn python-multipart
+COPY ./requirements.txt /
+RUN pip3 --no-cache-dir install -r /requirements.txt \
+    && rm -f /requirements.txt
 
 # 终端设置
 # 默认值是dumb，这时在终端操作时可能会出现：terminal is not fully functional

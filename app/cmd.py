@@ -62,6 +62,8 @@ def project_init(project_name: str, title: str=None, desc: str=""):
                     join(project_name, ".gitignone"))
     shutil.copyfile(join(package_path, 'data', 'Dockerfile'), 
                     join(project_name, 'Dockerfile'))
+    shutil.copyfile(join(package_path, 'data', 'requirements.txt'), 
+                    join(project_name, 'requirements.txt'))
     init_pyfile(join(project_name, 'Dockerfile'), cfg['author'])
     print('--> ok.')
 
