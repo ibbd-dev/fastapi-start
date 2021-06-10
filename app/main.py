@@ -4,19 +4,20 @@
 # Author: alex
 # Created Time: 2021年06月09日 星期三
 import fire
+from typing import Dict
 from .settings import VERSION
 from .cmd import config, get_config, project_init, module_add, py_file_add, code_check
 
 
-def version():
+def version() -> str:
     """版本号"""
-    print(f'Version: {VERSION}')
+    return f'Version: {VERSION}'
 
 
-def config_get():
+def config_get() -> Dict[str, str]:
     """获取配置信息"""
     cfg = get_config()
-    print(cfg)
+    return cfg
 
 
 def main():

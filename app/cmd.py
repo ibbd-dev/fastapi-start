@@ -9,24 +9,28 @@ from os.path import join
 import json
 import shutil
 from typing import Dict
-from .utils import init_pyfile
+from .utils import init_pyfile, get_user_from_git
 
 package_path = os.path.dirname(os.path.realpath(__file__))
 config_file = join(package_path, 'config.json')
 
 
-def config(author: str):
-    """配置用户名等信息
+def config(author: str, email: str):
+    """配置用户名等信息（如果不设置则默认从git命令中获取）
     :param author str: 用户名
+    :param email str: email
     """
     with open(config_file, 'w', encoding='utf8', newline='') as f:
-        data = {'author': author}
+        data = {'author': author, 'email': email}
         json.dump(data, f)
 
 
 def get_config() -> Dict[str, str]:
     if not os.path.isfile(config_file):
-        raise Exception("需要先设置用户名，帮助文档:\n    fastapi-start config --help")
+        author, email = get_user_from_git()
+        if author == '':
+            raise Exception("需要先设置用户名，帮助文档:\n    fastapi-start config --help")
+        return {'author': author, 'email': email}
     with open(config_file, encoding='utf8') as f:
         data = json.load(f)
     if 'author' not in data or data['author'] == '':
@@ -64,7 +68,7 @@ def project_init(project_name: str, title: str=None, desc: str=""):
                     join(project_name, 'Dockerfile'))
     shutil.copyfile(join(package_path, 'data', 'requirements.txt'), 
                     join(project_name, 'requirements.txt'))
-    init_pyfile(join(project_name, 'Dockerfile'), cfg['author'])
+    init_pyfile(join(project_name, 'Dockerfile'), cfg['author'], cfg['email'])
     print('--> ok.')
 
     # 生成md文件
@@ -86,7 +90,7 @@ def project_init(project_name: str, title: str=None, desc: str=""):
         if not filename.endswith('.py'):
             continue
         shutil.copyfile(join(src_path, filename), join(dst_path, filename))
-        if not init_pyfile(join(dst_path, filename), cfg['author']):
+        if not init_pyfile(join(dst_path, filename), cfg['author'], cfg['email']):
             raise Exception('init python file error: '+ join(dst_path, filename))
 
     src_path = join(src_path, 'common')
@@ -96,7 +100,7 @@ def project_init(project_name: str, title: str=None, desc: str=""):
         if not filename.endswith('.py'):
             continue
         shutil.copyfile(join(src_path, filename), join(dst_path, filename))
-        if not init_pyfile(join(dst_path, filename), cfg['author']):
+        if not init_pyfile(join(dst_path, filename), cfg['author'], cfg['email']):
             raise Exception('init python file error: '+ join(dst_path, filename))
     print('--> ok.')
     print(f'init project: {project_name} ok.')
@@ -123,7 +127,7 @@ def module_add(module_name: str):
         if not filename.endswith('.py'):
             continue
         shutil.copyfile(join(src_path, filename), join(module_name, filename))
-        if not init_pyfile(join(module_name, filename), cfg['author']):
+        if not init_pyfile(join(module_name, filename), cfg['author'], cfg['email']):
             raise Exception('init python file error: '+ join(module_name, filename))
     print('--> ok.')
     print(f'init module: {module_name} ok.')
@@ -144,7 +148,7 @@ def py_file_add(filename: str):
     src_path = os.path.dirname(os.path.realpath(__file__))
     shutil.copyfile(join(src_path, 'data', 'example.py'), filename)
     cfg = get_config()
-    init_pyfile(filename, cfg['author'])
+    init_pyfile(filename, cfg['author'], cfg['email'])
     print('--> ok.')
     print(f'init filename: {filename} ok.')
 
