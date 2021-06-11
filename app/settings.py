@@ -5,4 +5,4 @@
 # Created Time: 2021年06月09日 星期三
 
 # 版本
-VERSION = "0.5.3"
+VERSION = "0.5.4"

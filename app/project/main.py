@@ -4,13 +4,13 @@
 # Author: __author__
 # Email: __email__
 # Created Time: __created_time__
-from typing import Dict
 from fastapi import FastAPI
 # from fastapi import Depends
 # from fastapi.middleware.cors import CORSMiddleware
 
 from settings import DEBUG
 from utils import parse_readme
+from schema import VersionResp
 
 version = "0.5.0"     # 系统版本号
 title, description = parse_readme()
@@ -39,7 +39,8 @@ app.add_middleware(
 # app.include_router(module_router, prefix="/module", tags=["module"])
 
 
-@app.get("/version", summary='获取系统版本号')
-async def version_api() -> Dict[str, str]:
+@app.get("/version", summary='获取系统版本号',
+         response_model=VersionResp)
+async def version_api():
     """获取系统版本号"""
     return {"version": version}

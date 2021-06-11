@@ -7,6 +7,7 @@
 from typing import Dict
 from fastapi import APIRouter
 # from fastapi import Depends, HTTPException
+from schema import MessageResp     # 通用schema
 
 router = APIRouter(
     # dependencies=[Depends(get_token_header)],
@@ -14,7 +15,8 @@ router = APIRouter(
 )
 
 
-@router.get("/")
-async def test_api() -> Dict[str, str]:
+@router.get("/", summary='模块测试API',
+            response_model=MessageResp)
+async def test_api():
     """模块测试API"""
     return {'message': 'ok'}

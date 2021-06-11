@@ -38,7 +38,7 @@ def get_config() -> Dict[str, str]:
     return data
 
 
-def project_init(project_name: str, title: str=None, desc: str=""):
+def project_init(project_name: str, title: str='', desc: str=''):
     """项目初始化
     :param project_name str: 项目名（目录名）
     :param title str: 项目标题（显示在交互式文档中）
@@ -53,8 +53,10 @@ def project_init(project_name: str, title: str=None, desc: str=""):
     if os.path.isdir(project_name):
         raise Exception(f"project name: {project_name} is existed!")
     os.mkdir(project_name)
-    if title is None:
+    if len(title) == 0:
         title = project_name
+    else:
+        title = title.replace('\n', ' ')
     
     # vscode, gitignore, Dockerfile
     cfg = get_config()
@@ -132,8 +134,11 @@ def module_add(module_name: str):
     print('--> ok.')
     print(f'init module: {module_name} ok.')
 
-def py_file_add(filename: str):
-    """生成Python文件"""
+def py_file_add(filename: str, desc: str=''):
+    """生成Python文件
+    :param filename str: 文件名（若不以.py结尾，则会自动加上）
+    :param desc str: 描述信息
+    """
     name_pattern = '^[a-z0-9_\.]{4,20}$'
     if re.match(name_pattern, filename):
         print("file name check ok")
@@ -148,7 +153,8 @@ def py_file_add(filename: str):
     src_path = os.path.dirname(os.path.realpath(__file__))
     shutil.copyfile(join(src_path, 'data', 'example.py'), filename)
     cfg = get_config()
-    init_pyfile(filename, cfg['author'], cfg['email'])
+    replaces = {'__desc__': desc.replace('\n', '\n# ')}
+    init_pyfile(filename, cfg['author'], cfg['email'], replaces=replaces)
     print('--> ok.')
     print(f'init filename: {filename} ok.')
 
