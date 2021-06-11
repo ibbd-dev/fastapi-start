@@ -86,6 +86,7 @@ fastapi-start version
 │   ├── __init__.py
 │   ├── readme.md                # 接口的描述文档
 │   ├── main.py                  # 主入口文件
+│   ├── schema.py                # 通用schema
 │   ├── settings.py              # 配置文件
 │   ├── dependencies.py          # 
 │   ├── exceptions.py            # 异常相关
@@ -111,3 +112,7 @@ fastapi-start version
 - [x] 添加模块
 - [x] 生成Python文件
 - [ ] 规范化检测
+
+## 注意事项
+
+- 模块下还可以嵌套子模块，不断套娃，但是不建议这么干，这会让系统变得过于复杂；
