@@ -21,20 +21,18 @@ easy_install .
 
 ## 使用
 
-安装成功之后，会有一个命令`fastapi-start`
+安装成功之后，会有两个命令
+
+- `fastapi-start`: 完整命令
+- `fas`: 简单命令（完整命令的别名），实现功能和完整命令一样
+
+日常使用简单命令即可。
 
 ```sh
-# 初次使用时，首先配置用户名及email
-# 如果不设置，则自动使用git中的配置user.name及user.email
-fastapi-start config caiyy caiyy@ibbd.net
-
-# 查看配置的用户名及email
-fastapi-start config-get
-
 # 项目初始化
 # test是项目名称，可以指定为自己的项目名称
 # --title and --desc: 项目的标题及描述
-fastapi-start project-init test --title=测试项目 --desc=这是一个测试项目
+fas project-init test --title=测试项目 --desc=这是一个测试项目
 
 # 项目根目录
 # 项目代码目录
@@ -47,7 +45,7 @@ uvicorn main:app --reload --host 0.0.0.0
 
 # 添加一个模块
 # module是模块名称，可以设定
-fastapi-start module-add module
+fas module-add module
 
 # 添加模块之后，要使模块生效，需要手动在app/main.py文件中注册该路由
 # prefix: 该参数定义路由的前缀，每个模块的路由前缀必须是唯一的
@@ -55,20 +53,33 @@ from module.router import router as module_router
 app.include_router(module_router, prefix="/module", tags=["测试模块"])
 
 # 在当前目录增加一个python文件
-fastapi-start file-add filename
+fas file-add filename
 ```
 
 ### fastapi-start帮助文档
 
 ```sh
 # 显示所有帮助文档
-fastapi-start
+fas --help
 
 # 某个命令的帮助文档
-fastapi-start project-init --help
+fas project-init --help
 
 # 查看版本号
-fastapi-start version
+fas version
+
+# 如果不设置，则自动使用git中的配置user.name及user.email
+fas config --set --author=caiyy --email=caiyy@ibbd.net
+# 设置git clone命令的根目录
+fas config --set --root-path=D:\git\src
+
+# 可以查看配置信息
+fas config
+
+# clone项目
+# 项目会自动保存到规范化的目录中：{root-path}\git.ibbd.net\gf\iot-warning
+# root-path就是前面设置的配置： fas config --set --root-path=D:\git\src
+fas clone git@git.ibbd.net:gf/iot-warning.git
 ```
 
 ## 基于FastAPI的大中型项目应该具备
@@ -106,12 +117,22 @@ fastapi-start version
 ├── requirements.txt             # 项目依赖包
 ```
 
+模块的路由及其配置文件直接放到模块目录下，而不是将所有路由配置独立到一个目录。
+
 ## 脚手架基本功能
 
 - [x] 项目初始化
 - [x] 添加模块
 - [x] 生成Python文件
+- [x] 替代git clone命令的clone命令，并生成标准化的目录路径
 - [ ] 规范化检测
+
+### 标准化模块
+
+标准化模块，可以使用命令进行快捷添加
+
+- [ ] 验证码模块
+- [ ] 用户管理与登陆模块
 
 ## 注意事项
 
