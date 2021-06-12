@@ -27,11 +27,17 @@ def get_version(rel_path):
 
 
 LONG_DESCRIPTION = """
+使用：
+
+- 完整命令：fastapi-start
+- 缩写命令：fas
+
 包含功能：
 
 - [x] 项目初始化
 - [x] 添加模块
 - [x] 生成Python文件
+- [x] git路径规范
 - [ ] 规范化检测
 """.strip()
 
@@ -66,7 +72,9 @@ setup(
     entry_points={      # 安装命令
         "console_scripts": [
             "fastapi-start=fastapi_start.main:main",
+            # 命令别名
+            "fas=fastapi_start.main:main",
         ],
     },
-    # python_requires=">=3.6",
+    python_requires=">=3.6",
 )
