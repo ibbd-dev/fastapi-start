@@ -9,7 +9,8 @@ from os.path import join
 import json
 import shutil
 from typing import Dict
-from .utils import init_pyfile, get_user_from_git, parse_git_uri
+from .utils import init_pyfile, get_user_from_git, parse_git_uri, shell
+from .utils import flake8_stat
 
 package_path = os.path.dirname(os.path.realpath(__file__))
 config_file = join(package_path, 'config.json')
@@ -21,7 +22,7 @@ def config(set: bool = False, author: str = None, email: str = None, root_path: 
         set bool: 默认该命令是get
         author str: 用户名，如果不设置则从git命令中获取（set命令时有效）
         email str: email，如果不设置则从git命令中获取（set命令时有效）
-        root_path str: 代码根目录，使用clone命令的时候会在该目录下生成标准的目录路径，如：root_path/github.com/username/project/（set命令时有效）
+        root_path str: 代码根目录，使用clone命令的时候会在该目录下生成标准的目录路径，如: root_path/github.com/username/project/（set命令时有效）
     """
     if not set:
         return get_config()
@@ -86,22 +87,22 @@ def project_init(project_name: str, title: str = '', desc: str = ''):
     cfg = get_config()
     print('parse vscode settings, Dockerfile, readme and gitignore...')
     os.mkdir(join(project_name, ".vscode"))
-    shutil.copyfile(join(package_path, 'data', 'vscode_settings.json'), 
+    shutil.copyfile(join(package_path, 'data', 'vscode_settings.json'),
                     join(project_name, ".vscode", "settings.json"))
-    shutil.copyfile(join(package_path, 'data', 'gitignore'), 
+    shutil.copyfile(join(package_path, 'data', 'gitignore'),
                     join(project_name, ".gitignone"))
-    shutil.copyfile(join(package_path, 'data', 'Dockerfile'), 
+    shutil.copyfile(join(package_path, 'data', 'Dockerfile'),
                     join(project_name, 'Dockerfile'))
-    shutil.copyfile(join(package_path, 'data', 'requirements.txt'), 
+    shutil.copyfile(join(package_path, 'data', 'requirements.txt'),
                     join(project_name, 'requirements.txt'))
     init_pyfile(join(project_name, 'Dockerfile'), cfg['author'], cfg['email'])
-    shutil.copyfile(join(package_path, 'data', 'README.md'), 
+    shutil.copyfile(join(package_path, 'data', 'README.md'),
                     join(project_name, 'README.md'))
     replaces = {'title': title, 'desc': desc}
-    init_pyfile(join(project_name, 'README.md'), cfg['author'], cfg['email'], 
+    init_pyfile(join(project_name, 'README.md'), cfg['author'], cfg['email'],
                 replaces=replaces)
     print('--> ok.')
-    
+
     # 复制app目录
     print('copy and parse app files...')
     src_path = join(package_path, 'project')
@@ -202,17 +203,15 @@ def clone(uri):
     os.system(f"git clone {uri} {project_path}")
 
 
-def code_check(path: str = '', tool: str = 'flake8'):
-    """代码检测，目前支持的工具：flake8
-    忽略最后缺少空行的W292
+def code_check(path: str = ''):
+    """代码风格审查（主要使用flake8工具）
+    说明：忽略最后缺少空行的W292
     Args:
         path str: 代码目录，默认为当前目录
-        tool str: 使用的代码审查工具，默认为flake8
     """
-    if tool == 'flake8':
-        if path:
-            os.system(f'flake8 --ignore W292 {path}')
-        else:
-            os.system('flake8 --ignore W292')
-    else:
-        raise Exception(f"不支持该工具: {tool}")
+    res = shell(f'flake8 --ignore W292 {path}')
+    print(res)
+    print('\n不规范代码风格统计：')
+    data = flake8_stat(res.strip().split('\n'))
+    for key, cnt, msg in data:
+        print(f"  {key} {cnt}\t{msg}")
