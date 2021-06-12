@@ -80,6 +80,12 @@ fas config
 # 项目会自动保存到规范化的目录中：{root-path}\git.ibbd.net\gf\iot-warning
 # root-path就是前面设置的配置： fas config --set --root-path=D:\git\src
 fas clone git@git.ibbd.net:gf/iot-warning.git
+
+# 代码规范审查
+# 审查当前目录
+fas check
+# 审查指定目录
+fas check app
 ```
 
 ## 基于FastAPI的大中型项目应该具备
