@@ -7,7 +7,7 @@
 - [x] 项目初始化
 - [x] 添加模块
 - [x] 生成Python文件
-- [x] 规范化检测
+- [x] 代码风格检测
 - [x] 替代git clone命令的clone命令，并生成标准化的目录路径
 
 ## 2. 安装说明
@@ -81,14 +81,14 @@ fas version
 # 如果不设置，则自动使用git中的配置user.name及user.email
 fas config --set --author=caiyy --email=caiyy@ibbd.net
 # 设置git clone命令的根目录
-fas config --set --root-path=D:\git\src
+fas config --set --root-path=/var/www/src
 
 # 可以查看配置信息
 fas config
 
 # clone项目
-# 项目会自动保存到规范化的目录中：{root-path}\git.ibbd.net\gf\iot-warning
-# root-path就是前面设置的配置： fas config --set --root-path=D:\git\src
+# 项目会自动保存到规范化的目录中：{root-path}/git.ibbd.net/gf/iot-warning
+# root-path就是前面设置的配置： fas config --set --root-path=/var/www/src
 fas clone git@git.ibbd.net:gf/iot-warning.git
 
 # 代码规范审查
@@ -99,6 +99,17 @@ fas check app
 ```
 
 ## 4. FastAPI项目开发
+
+基本规则说明：
+
+- 使用4个空格缩进，换行符使用`\n`（vscode编辑器需要配置为LF，而不是CRLF）
+- 文件统一使用UTF-8编码
+- 接口响应的异常类型使用HTTP的状态码
+- HTTP方法的使用场景：
+  - GET: 获取数据
+  - DELETE: 删除数据
+  - PUT: 修改数据
+  - POST: 增加数据和复杂查询
 
 ### 4.1 基于FastAPI的大中型项目应该具备
 
@@ -125,7 +136,7 @@ fas check app
 │   └── module_name              # 模块目录，每个模块独立成一个目录
 │       ├── __init__.py
 │       ├── router.py            # 模块路由文件
-│       └── schema.py            # 路由文件配置
+│       └── schema.py            # 模块的schema
 ├── .vscode                      # vscode配置
 │   ├── settings.json
 ├── .gitignore
@@ -143,6 +154,11 @@ fas check app
 - [ ] 验证码模块
 - [ ] 用户管理与登陆模块
 
-## 4.4 注意事项
+### 4.4 注意事项
 
 - 模块下还可以嵌套子模块，不断套娃，但是不建议这么干，这会让系统变得过于复杂；
+
+## 5. Python编码规范
+
+- [PEP8规范](https://alvinzhu.xyz/2017/10/07/python-pep-8/)
+- [Google的开源项目风格指南](https://zh-google-styleguide.readthedocs.io/en/latest/google-python-styleguide/python_style_rules/)
