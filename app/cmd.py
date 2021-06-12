@@ -15,7 +15,7 @@ package_path = os.path.dirname(os.path.realpath(__file__))
 config_file = join(package_path, 'config.json')
 
 
-def config(set: bool=False, author: str=None, email: str=None, root_path: str=None):
+def config(set: bool = False, author: str = None, email: str = None, root_path: str = None):
     """配置author, email，代码根目录等信息
     Args:
         set bool: 默认该命令是get
@@ -61,7 +61,7 @@ def get_config() -> Dict[str, str]:
     return data
 
 
-def project_init(project_name: str, title: str='', desc: str=''):
+def project_init(project_name: str, title: str = '', desc: str = ''):
     """项目初始化
     Args:
         project_name str: 项目名（目录名）
@@ -69,7 +69,7 @@ def project_init(project_name: str, title: str='', desc: str=''):
         desc str: 项目描述（显示在交互式文档中）
     """
     # 创建项目目录
-    name_pattern = '^[a-z0-9\-]{4,20}$'
+    name_pattern = '^[a-z0-9\\-]{4,20}$'
     if re.match(name_pattern, project_name):
         print("project name check ok")
     else:
@@ -81,7 +81,7 @@ def project_init(project_name: str, title: str='', desc: str=''):
         title = project_name
     else:
         title = title.replace('\n', ' ')
-    
+
     # vscode, gitignore, Dockerfile
     cfg = get_config()
     print('parse vscode settings, Dockerfile and gitignore...')
@@ -117,7 +117,7 @@ def project_init(project_name: str, title: str='', desc: str=''):
             continue
         shutil.copyfile(join(src_path, filename), join(dst_path, filename))
         if not init_pyfile(join(dst_path, filename), cfg['author'], cfg['email']):
-            raise Exception('init python file error: '+ join(dst_path, filename))
+            raise Exception('init python file error: ' + join(dst_path, filename))
 
     src_path = join(src_path, 'common')
     dst_path = join(dst_path, 'common')
@@ -127,7 +127,7 @@ def project_init(project_name: str, title: str='', desc: str=''):
             continue
         shutil.copyfile(join(src_path, filename), join(dst_path, filename))
         if not init_pyfile(join(dst_path, filename), cfg['author'], cfg['email']):
-            raise Exception('init python file error: '+ join(dst_path, filename))
+            raise Exception('init python file error: ' + join(dst_path, filename))
     print('--> ok.')
     print(f'init project: {project_name} ok.')
 
@@ -155,17 +155,18 @@ def module_add(module_name: str):
             continue
         shutil.copyfile(join(src_path, filename), join(module_name, filename))
         if not init_pyfile(join(module_name, filename), cfg['author'], cfg['email']):
-            raise Exception('init python file error: '+ join(module_name, filename))
+            raise Exception('init python file error: ' + join(module_name, filename))
     print('--> ok.')
     print(f'init module: {module_name} ok.')
 
-def py_file_add(filename: str, desc: str=''):
+
+def py_file_add(filename: str, desc: str = ''):
     """生成Python文件
     Args:
         filename str: 文件名（若不以.py结尾，则会自动加上）
         desc str: 描述信息
     """
-    name_pattern = '^[a-z0-9_\.]{4,20}$'
+    name_pattern = '^[a-z0-9_\\.]{4,20}$'
     if re.match(name_pattern, filename):
         print("file name check ok")
     else:
@@ -204,6 +205,17 @@ def clone(uri):
     os.system(f"git clone {uri} {project_path}")
 
 
-def code_check():
-    """代码检测"""
-    print("该功能正在开发中...")
+def code_check(path: str = '', tool: str = 'flake8'):
+    """代码检测，目前支持的工具：flake8
+    忽略最后缺少空行的W292
+    Args:
+        path str: 代码目录，默认为当前目录
+        tool str: 使用的代码审查工具，默认为flake8
+    """
+    if tool == 'flake8':
+        if path:
+            os.system(f'flake8 --ignore W292 {path}')
+        else:
+            os.system('flake8 --ignore W292')
+    else:
+        raise Exception(f"不支持该工具: {tool}")

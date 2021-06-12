@@ -9,7 +9,7 @@ from datetime import datetime
 from typing import Dict, Tuple
 
 
-def init_pyfile(path: str, author: str, email: str, replaces: Dict[str, str]=None) -> bool:
+def init_pyfile(path: str, author: str, email: str, replaces: Dict[str, str] = None) -> bool:
     """初始化单个py文件
     生成作者和日期
     """
@@ -22,7 +22,7 @@ def init_pyfile(path: str, author: str, email: str, replaces: Dict[str, str]=Non
     if replaces is not None:
         for key, val in replaces.items():
             text = text.replace(key, val)
-        
+
     with open(path, 'w', encoding='utf8', newline='') as f:
         f.write(text)
     return True
@@ -47,13 +47,13 @@ def parse_git_uri(uri) -> Dict[str, str]:
     """
     def _parse(host: str, group: str, project: str):
         if ' ' in host or ' ' in group or ' ' in project:
-            return None 
+            return None
         if project.endswith('.git'):
             project = project[:-4]
         return {'host': host, 'group': group, 'project': project}
 
     if uri[:4] == 'git@':
-        pattern = "^git\@([^\/]+)\:([^\/]+)\/([^\/]+)$"
+        pattern = "^git@([^\/]+)\:([^\/]+)\/([^\/]+)$"
         matches = re.match(pattern, uri)
         if matches:
             return _parse(*matches.groups())

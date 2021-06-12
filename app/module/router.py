@@ -4,7 +4,7 @@
 # Author: __author__
 # Email: __email__
 # Created Time: __created_time__
-from typing import Dict
+# from typing import Dict
 from fastapi import APIRouter
 # from fastapi import Depends, HTTPException
 from schema import MessageResp     # 通用schema

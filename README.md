@@ -125,7 +125,7 @@ fas clone git@git.ibbd.net:gf/iot-warning.git
 - [x] 添加模块
 - [x] 生成Python文件
 - [x] 替代git clone命令的clone命令，并生成标准化的目录路径
-- [ ] 规范化检测
+- [x] 规范化检测
 
 ### 标准化模块
 
