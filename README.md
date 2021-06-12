@@ -1,5 +1,13 @@
 # FastAPI脚手架：用于系统后端接口项目
 
+## 脚手架基本功能
+
+- [x] 项目初始化
+- [x] 添加模块
+- [x] 生成Python文件
+- [x] 替代git clone命令的clone命令，并生成标准化的目录路径
+- [x] 规范化检测
+
 ## 安装
 
 ```sh
@@ -80,6 +88,12 @@ fas config
 # 项目会自动保存到规范化的目录中：{root-path}\git.ibbd.net\gf\iot-warning
 # root-path就是前面设置的配置： fas config --set --root-path=D:\git\src
 fas clone git@git.ibbd.net:gf/iot-warning.git
+
+# 代码规范审查
+# 审查当前目录
+fas check
+# 审查指定目录
+fas check app
 ```
 
 ## 基于FastAPI的大中型项目应该具备
@@ -118,14 +132,6 @@ fas clone git@git.ibbd.net:gf/iot-warning.git
 ```
 
 模块的路由及其配置文件直接放到模块目录下，而不是将所有路由配置独立到一个目录。
-
-## 脚手架基本功能
-
-- [x] 项目初始化
-- [x] 添加模块
-- [x] 生成Python文件
-- [x] 替代git clone命令的clone命令，并生成标准化的目录路径
-- [ ] 规范化检测
 
 ### 标准化模块
 

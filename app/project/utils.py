@@ -6,7 +6,7 @@
 # Created Time: __created_time__
 
 
-def parse_readme(filename: str='readme.md'):
+def parse_readme(filename: str = 'readme.md'):
     """解释readme文件
     :param filename str: md文件名
     :return title str: 标题
