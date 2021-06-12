@@ -9,19 +9,19 @@ from datetime import datetime
 from typing import Dict, Tuple
 
 
-def init_pyfile(path: str, author: str, email: str, replaces: Dict[str, str] = None) -> bool:
+def init_pyfile(path: str, author: str, email: str, replaces: Dict[str, str] = {}) -> bool:
     """初始化单个py文件
     生成作者和日期
+    Args:
+        replaces 格式{'title': title}
     """
     with open(path, encoding='utf8') as f:
         text = f.read()
-    today = datetime.now().strftime("%Y-%m-%d")
-    text = text.replace('__author__', author)
-    text = text.replace('__email__', email)
-    text = text.replace('__created_time__', today)
-    if replaces is not None:
-        for key, val in replaces.items():
-            text = text.replace(key, val)
+    replaces['author'] = author
+    replaces['email'] = email
+    replaces['created_time'] = datetime.now().strftime("%Y-%m-%d")
+    for key, val in replaces.items():
+        text = text.replace(f'__{key}__', val)
 
     with open(path, 'w', encoding='utf8', newline='') as f:
         f.write(text)

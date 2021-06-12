@@ -84,7 +84,7 @@ def project_init(project_name: str, title: str = '', desc: str = ''):
 
     # vscode, gitignore, Dockerfile
     cfg = get_config()
-    print('parse vscode settings, Dockerfile and gitignore...')
+    print('parse vscode settings, Dockerfile, readme and gitignore...')
     os.mkdir(join(project_name, ".vscode"))
     shutil.copyfile(join(package_path, 'data', 'vscode_settings.json'), 
                     join(project_name, ".vscode", "settings.json"))
@@ -95,14 +95,11 @@ def project_init(project_name: str, title: str = '', desc: str = ''):
     shutil.copyfile(join(package_path, 'data', 'requirements.txt'), 
                     join(project_name, 'requirements.txt'))
     init_pyfile(join(project_name, 'Dockerfile'), cfg['author'], cfg['email'])
-    print('--> ok.')
-
-    # 生成md文件
-    print('create md file...')
-    with open(join(project_name, "README.md"), 'w', encoding='utf8', newline='') as f:
-        f.write(f"# {title}\n{desc}")
-    with open(join(project_name, "install.md"), 'w', encoding='utf8', newline='') as f:
-        f.write(f"# {title}: 安装部署与运维文档")
+    shutil.copyfile(join(package_path, 'data', 'README.md'), 
+                    join(project_name, 'README.md'))
+    replaces = {'title': title, 'desc': desc}
+    init_pyfile(join(project_name, 'README.md'), cfg['author'], cfg['email'], 
+                replaces=replaces)
     print('--> ok.')
     
     # 复制app目录
@@ -180,7 +177,7 @@ def py_file_add(filename: str, desc: str = ''):
     src_path = os.path.dirname(os.path.realpath(__file__))
     shutil.copyfile(join(src_path, 'data', 'example.py'), filename)
     cfg = get_config()
-    replaces = {'__desc__': desc.replace('\n', '\n# ')}
+    replaces = {'desc': desc.replace('\n', '\n# ')}
     init_pyfile(filename, cfg['author'], cfg['email'], replaces=replaces)
     print('--> ok.')
     print(f'init filename: {filename} ok.')
