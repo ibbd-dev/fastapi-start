@@ -42,8 +42,10 @@ def get_user_from_git() -> Tuple[str, str]:
 
 def parse_git_uri(uri) -> Dict[str, str]:
     """解释git的路径
-    :param uri str: 格式如git@github.com:group/project.git or https://github.com/group/project
-    :return dict|None {host: "", group: "", project: ""}
+    Args:
+        uri str: 格式如git@github.com:group/project.git or https://github.com/group/project
+    Returns:
+        dict|None {host: "", group: "", project: ""}
     """
     def _parse(host: str, group: str, project: str):
         if ' ' in host or ' ' in group or ' ' in project:
