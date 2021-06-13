@@ -62,8 +62,8 @@ fas module-add module
 from module.router import router as module_router
 app.include_router(module_router, prefix="/module", tags=["测试模块"])
 
-# 在当前目录增加一个python文件
-fas file-add filename
+# 在当前目录增加一个test.py文件
+fas file --filename=test
 ```
 
 ### 3.1 帮助文档
@@ -96,11 +96,16 @@ fas clone git@git.ibbd.net:gf/iot-warning.git
 fas check
 # 审查指定目录
 fas check app
+
+# 在当前目录生成README.md
+fas file --filetype=readme --title=测试标题 --desc=描述信息
 ```
 
 ## 4. FastAPI项目开发
 
-基本规则说明：
+编码风格遵循[PEP8]((https://alvinzhu.xyz/2017/10/07/python-pep-8/))，接口风格参考[RESTFul](https://mp.weixin.qq.com/s/EOzkOlhrT4pvWIyJ_kfcqw)。
+
+重要规则说明：
 
 - 使用4个空格缩进，换行符使用`\n`（vscode编辑器需要配置为LF，而不是CRLF）
 - 文件统一使用UTF-8编码
@@ -110,6 +115,27 @@ fas check app
   - DELETE: 删除数据
   - PUT: 修改数据
   - POST: 增加数据和复杂查询
+- 函数的输入输出的参数类型需要明确的类型定义，粒度到最基础的简单类型，如布尔值，整型，浮点型，字符串等。对于复杂类型，则应该进一步细化：
+
+```python
+from typing import Tuple, List, Dict, Set
+
+# 元组
+Tuple[int, str, int]  # 三个元素的元组
+
+# 列表
+List[int]    # 元素类型为int的列表
+
+# 字典
+Dict[str, int]    # key类型为str，value类型为int
+
+# 集合（和列表类型）
+Set[int]
+```
+
+参考[Python类型编程](https://mp.weixin.qq.com/s/N_AfjCWg_gcQzqs22KEgVA)
+
+- 在FastAPI中则尽量不要定义字典的输入输出，而是使用继承于`BaseModel`的类结构，可以详细定义每个字段的schema。
 
 ### 4.1 基于FastAPI的大中型项目应该具备
 
@@ -162,3 +188,5 @@ fas check app
 
 - [PEP8规范](https://alvinzhu.xyz/2017/10/07/python-pep-8/)
 - [Google的开源项目风格指南](https://zh-google-styleguide.readthedocs.io/en/latest/google-python-styleguide/python_style_rules/)
+- [RESTFul](https://mp.weixin.qq.com/s/EOzkOlhrT4pvWIyJ_kfcqw)
+- [Python类型编程](https://mp.weixin.qq.com/s/N_AfjCWg_gcQzqs22KEgVA)

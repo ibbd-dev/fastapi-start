@@ -6,64 +6,18 @@
 import re
 import os
 from os.path import join
-import json
 import shutil
-from typing import Dict
-from .utils import init_pyfile, get_user_from_git, parse_git_uri, shell
+from .settings import package_path
+from .utils import init_file, parse_git_uri, shell
 from .utils import flake8_stat
-
-package_path = os.path.dirname(os.path.realpath(__file__))
-config_file = join(package_path, 'config.json')
+from .config_cmd import get_config
 
 
-def config(set: bool = False, author: str = None, email: str = None, root_path: str = None):
-    """配置author, email，代码根目录等信息
-    Args:
-        set bool: 默认该命令是get
-        author str: 用户名，如果不设置则从git命令中获取（set命令时有效）
-        email str: email，如果不设置则从git命令中获取（set命令时有效）
-        root_path str: 代码根目录，使用clone命令的时候会在该目录下生成标准的目录路径，如: root_path/github.com/username/project/（set命令时有效）
-    """
-    if not set:
-        return get_config()
-
-    if os.path.isfile(config_file):
-        with open(config_file, encoding='utf8') as f:
-            data = json.load(f)
-    else:
-        data = {}
-    if author:
-        data['author'] = author
-    if email:
-        data['email'] = email
-    if root_path:
-        if not os.path.isdir(root_path):
-            raise Exception(f'代码根目录不是有效目录：{root_path}')
-        data['root_path'] = root_path
-    if data:
-        with open(config_file, 'w', encoding='utf8', newline='') as f:
-            json.dump(data, f)
-
-
-def get_config() -> Dict[str, str]:
-    """获取配置信息
-    Returns:
-        dict
-    """
-    if not os.path.isfile(config_file):
-        author, email = get_user_from_git()
-        if author == '':
-            raise Exception("需要先设置用户名，帮助文档:\n    fastapi-start config --help")
-        return {'author': author, 'email': email}
-    with open(config_file, encoding='utf8') as f:
-        data = json.load(f)
-    if 'author' not in data or data['author'] == '':
-        data['author'], data['email'] = get_user_from_git()
-    return data
-
-
-def project_init(project_name: str, title: str = '', desc: str = ''):
+def project_init(project_name: str, title='', desc=''):
     """项目初始化
+
+    Examples:
+        fas project-init test --title=测试项目 --desc=这是一个测试项目
     Args:
         project_name str: 项目名（目录名）
         title str: 项目标题（显示在交互式文档中）
@@ -95,12 +49,12 @@ def project_init(project_name: str, title: str = '', desc: str = ''):
                     join(project_name, 'Dockerfile'))
     shutil.copyfile(join(package_path, 'data', 'requirements.txt'),
                     join(project_name, 'requirements.txt'))
-    init_pyfile(join(project_name, 'Dockerfile'), cfg['author'], cfg['email'])
+    init_file(join(project_name, 'Dockerfile'), cfg['author'], cfg['email'])
     shutil.copyfile(join(package_path, 'data', 'README.md'),
                     join(project_name, 'README.md'))
     replaces = {'title': title, 'desc': desc}
-    init_pyfile(join(project_name, 'README.md'), cfg['author'], cfg['email'],
-                replaces=replaces)
+    init_file(join(project_name, 'README.md'), cfg['author'], cfg['email'],
+              replaces=replaces)
     print('--> ok.')
 
     # 复制app目录
@@ -114,7 +68,7 @@ def project_init(project_name: str, title: str = '', desc: str = ''):
         if not filename.endswith('.py'):
             continue
         shutil.copyfile(join(src_path, filename), join(dst_path, filename))
-        if not init_pyfile(join(dst_path, filename), cfg['author'], cfg['email']):
+        if not init_file(join(dst_path, filename), cfg['author'], cfg['email']):
             raise Exception('init python file error: ' + join(dst_path, filename))
 
     src_path = join(src_path, 'common')
@@ -124,7 +78,7 @@ def project_init(project_name: str, title: str = '', desc: str = ''):
         if not filename.endswith('.py'):
             continue
         shutil.copyfile(join(src_path, filename), join(dst_path, filename))
-        if not init_pyfile(join(dst_path, filename), cfg['author'], cfg['email']):
+        if not init_file(join(dst_path, filename), cfg['author'], cfg['email']):
             raise Exception('init python file error: ' + join(dst_path, filename))
     print('--> ok.')
     print(f'init project: {project_name} ok.')
@@ -152,36 +106,10 @@ def module_add(module_name: str):
         if not filename.endswith('.py'):
             continue
         shutil.copyfile(join(src_path, filename), join(module_name, filename))
-        if not init_pyfile(join(module_name, filename), cfg['author'], cfg['email']):
+        if not init_file(join(module_name, filename), cfg['author'], cfg['email']):
             raise Exception('init python file error: ' + join(module_name, filename))
     print('--> ok.')
     print(f'init module: {module_name} ok.')
-
-
-def py_file_add(filename: str, desc: str = ''):
-    """生成Python文件
-    Args:
-        filename str: 文件名（若不以.py结尾，则会自动加上）
-        desc str: 描述信息
-    """
-    name_pattern = '^[a-z0-9_\\.]{4,20}$'
-    if re.match(name_pattern, filename):
-        print("file name check ok")
-    else:
-        raise Exception(f'file name check error: {name_pattern}')
-    if not filename.endswith('.py'):
-        filename += '.py'
-    if os.path.isfile(filename):
-        raise Exception(f"file name: {filename} is existed!")
-
-    print('create file...')
-    src_path = os.path.dirname(os.path.realpath(__file__))
-    shutil.copyfile(join(src_path, 'data', 'example.py'), filename)
-    cfg = get_config()
-    replaces = {'desc': desc.replace('\n', '\n# ')}
-    init_pyfile(filename, cfg['author'], cfg['email'], replaces=replaces)
-    print('--> ok.')
-    print(f'init filename: {filename} ok.')
 
 
 def clone(uri):
@@ -203,15 +131,19 @@ def clone(uri):
     os.system(f"git clone {uri} {project_path}")
 
 
-def code_check(path: str = ''):
-    """代码风格审查（主要使用flake8工具）
-    说明：忽略最后缺少空行的W292
+def code_check(path='', ignore='W292'):
+    """代码风格审查
+
+    主要使用flake8工具，可以配置忽略哪些问题
     Args:
         path str: 代码目录，默认为当前目录
+        ignore str: 可以忽略指定类型，默认为W292。多种类型则用英文逗号隔开
     """
-    res = shell(f'flake8 --ignore W292 {path}')
+    if ignore:
+        ignore = f'--ignore {ignore}'
+    res = shell(f'flake8 {ignore} {path}')
     print(res)
-    print('\n不规范代码风格统计：')
+    print('\n不规范类型统计：')
     data = flake8_stat(res.strip().split('\n'))
     for key, cnt, msg in data:
         print(f"  {key} {cnt}\t{msg}")
