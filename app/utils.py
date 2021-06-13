@@ -9,8 +9,8 @@ from datetime import datetime
 from typing import Dict, Tuple, List
 
 
-def init_pyfile(path: str, author: str, email: str, replaces: Dict[str, str] = {}) -> bool:
-    """初始化单个py文件
+def init_file(path: str, author: str, email: str, replaces: Dict[str, str] = {}) -> bool:
+    """初始化单个文件（主要时模板变量替换）
     生成作者和日期
     Args:
         replaces 格式{'title': title}
