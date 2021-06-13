@@ -1,6 +1,10 @@
 # FastAPI脚手架：用于系统后端接口项目
 
-该工具主要用于协助规范FastAPI项目的目录及代码风格等。
+该工具主要用于协助规范FastAPI项目的目录及代码风格等。工具目标：
+
+- 规范FastAPI后端接口项目开发。
+- 提升后端​开发效率，减少重复工作。
+- 增加不同项目间共享模块开发的可能性​。
 
 ## 1. 功能介绍
 
@@ -13,6 +17,7 @@
 ## 2. 安装说明
 
 ```sh
+# 推荐安装方式
 # linux
 sudo -H pip3 install -r https://github.com/ibbd-dev/fastapi-start/raw/main/requirements.txt
 sudo -H pip3 install git+https://github.com/ibbd-dev/fastapi-start.git
@@ -26,6 +31,9 @@ OR
 
 ```sh
 # 源码安装
+git clone https://github.com/ibbd-dev/fastapi-start
+cd fastapi-start
+pip install -r requiresment.txt
 easy_install .
 ```
 
