@@ -7,7 +7,7 @@
 # from typing import Dict
 from fastapi import APIRouter
 # from fastapi import Depends, HTTPException
-from ..schema import MessageResp     # 通用schema
+from schema import MessageResp     # 通用schema
 
 router = APIRouter(
     # dependencies=[Depends(get_token_header)],
