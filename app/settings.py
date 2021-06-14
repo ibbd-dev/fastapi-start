@@ -6,7 +6,7 @@
 import os
 
 # 版本
-VERSION = "0.5.7"
+VERSION = "0.6.0"
 
 # 包跟目录
 package_path = os.path.dirname(os.path.realpath(__file__))

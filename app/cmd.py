@@ -62,54 +62,24 @@ def project_init(project_name: str, title='', desc=''):
     src_path = join(package_path, 'project')
     dst_path = join(project_name, 'app')
     os.mkdir(dst_path)
-    with open(join(dst_path, "readme.md"), 'w', encoding='utf8', newline='') as f:
-        f.write(f"# {title}\n{desc}")
     for filename in os.listdir(src_path):
-        if not filename.endswith('.py'):
-            continue
+        if not filename.endswith(('.py', '.md')):
+            continue   # 如果不是py文件或者md文件
         shutil.copyfile(join(src_path, filename), join(dst_path, filename))
-        if not init_file(join(dst_path, filename), cfg['author'], cfg['email']):
-            raise Exception('init python file error: ' + join(dst_path, filename))
+        if not init_file(join(dst_path, filename), cfg['author'], cfg['email'], replaces=replaces):
+            raise Exception('init file error: ' + join(dst_path, filename))
 
     src_path = join(src_path, 'common')
     dst_path = join(dst_path, 'common')
     os.mkdir(dst_path)
     for filename in os.listdir(src_path):
-        if not filename.endswith('.py'):
+        if not filename.endswith(('.py', '.md')):
             continue
         shutil.copyfile(join(src_path, filename), join(dst_path, filename))
-        if not init_file(join(dst_path, filename), cfg['author'], cfg['email']):
-            raise Exception('init python file error: ' + join(dst_path, filename))
+        if not init_file(join(dst_path, filename), cfg['author'], cfg['email'], replaces=replaces):
+            raise Exception('init file error: ' + join(dst_path, filename))
     print('--> ok.')
     print(f'init project: {project_name} ok.')
-
-
-def module_add(module_name: str):
-    """增加模块（应该在项目的app目录下执行）
-    Args:
-        module_name str: 模块名
-    """
-    name_pattern = '^[a-z0-9_]{4,20}$'
-    if re.match(name_pattern, module_name):
-        print("module name check ok")
-    else:
-        raise Exception(f'module name check error: {name_pattern}')
-    if os.path.isdir(module_name):
-        raise Exception(f'module name: {module_name} is existed!')
-    cfg = get_config()
-    project_path = os.path.dirname(os.path.realpath(__file__))
-
-    print('copy and parse app files...')
-    src_path = join(project_path, 'module')
-    os.mkdir(module_name)
-    for filename in os.listdir(src_path):
-        if not filename.endswith('.py'):
-            continue
-        shutil.copyfile(join(src_path, filename), join(module_name, filename))
-        if not init_file(join(module_name, filename), cfg['author'], cfg['email']):
-            raise Exception('init python file error: ' + join(module_name, filename))
-    print('--> ok.')
-    print(f'init module: {module_name} ok.')
 
 
 def clone(uri):
