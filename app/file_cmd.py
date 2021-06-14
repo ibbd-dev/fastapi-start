@@ -49,7 +49,7 @@ def readme_create(title: str, desc: str):
 
 def python_create(filename: str, desc: str):
     """python文件创建"""
-    name_pattern = '^[a-z0-9_\\.]{4,20}$'
+    name_pattern = '^[a-z0-9_\\.]{3,20}$'
     if re.match(name_pattern, filename):
         print("file name check ok")
     else:

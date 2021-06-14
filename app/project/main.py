@@ -35,8 +35,14 @@ app.add_middleware(
 """
 
 # 加载模块路由
-# from module.router import router as module_router
-# app.include_router(module_router, prefix="/module", tags=["module"])
+# from test_module.router import router as test_router
+# app.include_router(test_router, prefix="/test", tags=["测试模块"])
+
+# 加载验证码模块
+# from captcha_module.api import config as captcha_config
+# from captcha_module.router import router as captcha_router
+# captcha_config('192.168.1.242')   # 配置redis host
+# app.include_router(captcha_router, prefix="/captcha", tags=["验证码模块"])
 
 
 @app.get("/version", summary='获取系统版本号',

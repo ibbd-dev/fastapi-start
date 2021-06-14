@@ -2,3 +2,5 @@ requests
 fastapi
 uvicorn
 python-multipart
+# FileResponse依赖
+aiofiles

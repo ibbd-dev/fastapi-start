@@ -38,7 +38,7 @@ LONG_DESCRIPTION = """
 - [x] 添加模块
 - [x] 生成Python文件
 - [x] git路径规范
-- [ ] 规范化检测
+- [x] 编码风格审查
 """.strip()
 
 SHORT_DESCRIPTION = """FastAPI脚手架""".strip()
@@ -65,9 +65,10 @@ setup(
     package_dir={'fastapi_start': 'app'},
     package_data={'fastapi_start': [
                                     os.path.join('data', '*'),
-                                    os.path.join('module', '*'),
                                     os.path.join('project', '*'),
                                     os.path.join('project', 'common', '*'),
+                                    os.path.join('project', 'module', '*'),
+                                    os.path.join('project', 'captcha_module', '*'),
                                     ]},
     entry_points={      # 安装命令
         "console_scripts": [

@@ -62,13 +62,13 @@ uvicorn main:app --reload --host 0.0.0.0
 # 查看接口文档
 
 # 添加一个模块
-# module是模块名称，可以设定
-fas module-add module
+# test是模块名称，可以设定
+fas module --action=new --name=test
 
 # 添加模块之后，要使模块生效，需要手动在app/main.py文件中注册该路由
 # prefix: 该参数定义路由的前缀，每个模块的路由前缀必须是唯一的
-from module.router import router as module_router
-app.include_router(module_router, prefix="/module", tags=["测试模块"])
+from test_module.router import router as test_router
+app.include_router(test_router, prefix="/test", tags=["测试模块"])
 
 # 在当前目录增加一个test.py文件
 fas file --filename=test
@@ -166,27 +166,35 @@ Set[int]
 │   ├── exceptions.py            # 异常相关
 │   ├── utile.py                 # 通用的工具函数
 │   ├── common                   # 公共模块
-│   │   ├── __init__.py
+│   │   └── __init__.py
 │   └── module_name              # 模块目录，每个模块独立成一个目录
 │       ├── __init__.py
+│       ├── README.md            # 模块说明文件
 │       ├── router.py            # 模块路由文件
-│       └── schema.py            # 模块的schema
+│       ├── schema.py            # 模块的schema
+│       └── requirements.txt     # 模块依赖项
 ├── .vscode                      # vscode配置
-│   ├── settings.json
+│   └── settings.json
 ├── .gitignore
 ├── README.md                    # 项目说明文档
 ├── Dockerfile                   # Docker
-├── requirements.txt             # 项目依赖包
+└── requirements.txt             # 项目依赖包
 ```
 
 模块的路由及其配置文件直接放到模块目录下，而不是将所有路由配置独立到一个目录。
 
 ### 4.3 标准化模块
 
-标准化模块，可以使用命令进行快捷添加
+标准化模块，可以使用命令进行快捷添加。
 
-- [ ] 验证码模块
-- [ ] 用户管理与登陆模块
+```sh
+# 支持的模块列表
+fas module --action=list
+```
+
+#### 4.3.1 验证码模块
+
+[使用文档](/app/project/captcha_module/README.md)
 
 ### 4.4 注意事项
 

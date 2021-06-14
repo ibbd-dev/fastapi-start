@@ -6,10 +6,11 @@
 import fire
 # from typing import Dict
 from .settings import VERSION
-from .cmd import project_init, module_add, code_check
+from .cmd import project_init, code_check
 from .cmd import clone
 from .config_cmd import config
 from .file_cmd import file_create
+from .module_cmd import module_action
 
 
 def version() -> str:
@@ -25,7 +26,7 @@ def main():
         'config': config,
 
         'project-init': project_init,
-        'module-add': module_add,
+        'module': module_action,
         'file': file_create,
         'check': code_check,
     })
