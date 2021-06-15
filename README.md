@@ -104,6 +104,9 @@ fas clone git@git.ibbd.net:gf/iot-warning.git
 fas check
 # 审查指定目录
 fas check app
+# 对于某种类型的问题，可以启用自动修正，如：
+fas check --path app --select=W292 --autopep8 
+# 不过使用自动修正时要注意检查比较
 
 # 在当前目录生成README.md
 fas file --filetype=readme --title=测试标题 --desc=描述信息
@@ -166,7 +169,8 @@ Set[int]
 │   ├── exceptions.py            # 异常相关
 │   ├── utile.py                 # 通用的工具函数
 │   ├── common                   # 公共模块
-│   │   └── __init__.py
+│   |   ├── __init__.py
+│   │   └── connections.py       # redis, mysql等连接公共函数
 │   └── module_name              # 模块目录，每个模块独立成一个目录
 │       ├── __init__.py
 │       ├── README.md            # 模块说明文件
