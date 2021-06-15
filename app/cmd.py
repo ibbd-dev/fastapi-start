@@ -101,17 +101,33 @@ def clone(uri):
     os.system(f"git clone {uri} {project_path}")
 
 
-def code_check(path='', ignore='W292'):
+def code_check(path='', ignore: str = 'W292', select: str = ''):
     """代码风格审查
 
     主要使用flake8工具，可以配置忽略哪些问题
+    Examples:
+        fas check --path=app --ignore E501,W292
     Args:
         path str: 代码目录，默认为当前目录
-        ignore str: 可以忽略指定类型，默认为W292。多种类型则用英文逗号隔开
+        ignore str: 可以忽略指定类型，默认为W292。多种类型则用英文逗号隔开。
+        select str: 只检测某些类型，默认不开启该选项。
     """
-    if ignore:
+    cmd = ''
+    if select:
+        if type(select) != str:
+            select = ','.join(select)
+        select = f'--select {select}'
+        cmd = f'flake8 {select} {path}'
+    elif ignore:
+        if type(ignore) != str:
+            ignore = ','.join(ignore)
         ignore = f'--ignore {ignore}'
-    res = shell(f'flake8 {ignore} {path}')
+        cmd = f'flake8 {ignore} {path}'
+
+    print(cmd)
+    res = shell(cmd).strip()
+    if not res:
+        return
     print(res)
     print('\n不规范类型统计：')
     data = flake8_stat(res.strip().split('\n'))
