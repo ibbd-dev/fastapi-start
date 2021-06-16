@@ -12,27 +12,31 @@ from .utils import init_file
 from .config_cmd import get_config
 
 
-def file_create(filename='', filetype='python', title='', desc=''):
-    """生成规范文件
+class File:
+    """文件操作(生成规范格式的Python文档，readme文档等)
 
     Examples:
         生成Python文件:
-            fas file --filename=test --desc=这是测试文件
+            fas file python test --desc=这是测试文件
         生成Readme文件:
-            fas file --filetype=readme --title=测试标题 --desc=测试描述
-    Args:
-        filename str: 文件名
-        filetype str: 生成指定类型的文件，默认为python。暂时支持: python，readme
-        title str: 标题
-        desc str: 描述信息
+            fas file readme --title=测试标题 --desc=测试描述
     """
-    filetype = filetype.lower()
-    if filetype == 'python':
+
+    def python(self, filename: str, desc: str = ''):
+        """生成规范格式的Python文件
+        Args:
+            filename str: 文件名（会自动加上后缀.py）
+            desc str: 文件描述信息
+        """
         python_create(filename, desc)
-    elif filetype == 'readme':
+
+    def readme(self, title: str = '', desc: str = ''):
+        """生成规范的readme文件
+        Args:
+            title str: readme文件标题
+            desc str: 描述信息
+        """
         readme_create(title, desc)
-    else:
-        raise Exception(f'暂不支持该类型: {filetype}')
 
 
 def readme_create(title: str, desc: str):

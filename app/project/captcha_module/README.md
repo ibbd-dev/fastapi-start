@@ -5,7 +5,10 @@
 - 1. 增加验证码模块:
 
 ```sh
-fas module add --name=captcha
+fas module add captcha
+
+# 查看该命令的帮助
+fas module add --help
 ```
 
 - 2. 在系统主入口文件（main.py）注册验证码模块：

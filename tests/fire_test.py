@@ -11,24 +11,26 @@ This module implements the Requests API.
 """
 import fire
 
-class Calculator(object):
-  """A simple calculator class.\n
-  more
-  """
 
-  def double(self, number):
-      """
-      函数注释
-      :param 
-      """
-      return 2 * number
+class Calculator(object):
+    """A simple calculator class.\n
+    more
+    """
+
+    def double(self, number):
+        """
+        函数注释
+        :param
+        """
+        return 2 * number
 
 
 def hello():
-  """
-  函数注释1
-  函数注释2
-  """
+    """
+    函数注释1
+    函数注释2
+    """
+
 
 if __name__ == '__main__':
-  fire.Fire({'hello': hello})
+    fire.Fire({'hello': hello})
