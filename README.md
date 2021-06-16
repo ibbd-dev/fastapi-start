@@ -46,6 +46,8 @@ easy_install .
 
 日常使用简单命令即可。
 
+### 3.1 项目日常使用
+
 ```sh
 # 项目初始化
 # test是项目名称，可以指定为自己的项目名称
@@ -71,10 +73,11 @@ from test_module.router import router as test_router
 app.include_router(test_router, prefix="/test", tags=["测试模块"])
 
 # 在当前目录增加一个test.py文件
-fas file --filename=test
+# python是文件类型，test是文件名
+fas file python test
 ```
 
-### 3.1 帮助文档
+### 3.2 帮助文档
 
 ```sh
 # 显示所有帮助文档
@@ -92,25 +95,38 @@ fas config set --author=caiyy --email=caiyy@ibbd.net
 fas config set --root-path=/var/www/src
 
 # 可以查看配置信息
-fas config
+fas config get
 
 # clone项目
 # 项目会自动保存到规范化的目录中：{root-path}/git.ibbd.net/gf/iot-warning
-# root-path就是前面设置的配置： fas config --set --root-path=/var/www/src
+# root-path就是前面设置的配置： fas config set --root-path=/var/www/src
 fas clone git@git.ibbd.net:gf/iot-warning.git
 
-# 代码规范审查
+# 在当前目录生成README.md
+fas file readme --title=测试标题 --desc=描述信息
+```
+
+### 3.3 代码审查
+
+```sh
+# 帮助文档
+fas check --help
+
 # 审查当前目录
 fas check
+
 # 审查指定目录（假设app是项目代码所在目录）
 fas check app
+
 # 对于某种类型的问题，可以启用自动修正，如：
 fas check --path app --select=W292 --autopep8 
 # 不过使用自动修正时要注意检查比较
-
-# 在当前目录生成README.md
-fas file --filetype=readme --title=测试标题 --desc=描述信息
 ```
+
+使用说明：
+
+- 风格审查使用的工具是`flake8`，直接使用也一样。
+- 并不是所有不规范的地方都应该修复，例如行代码过长的问题，如果不是很离谱，则可以不处理（当然，最好还是处理）。
 
 ## 4. FastAPI项目开发
 
@@ -192,14 +208,20 @@ Set[int]
 内置模块，可以使用命令进行快捷添加。
 
 ```sh
+# module命令帮助文档
+fas module --help
+
+# 查看module命令的子命令的帮助文档
+fas module add --help
+
 # 支持的模块列表
 fas module list
 
 # 查看某内置模块的帮助文档
-fas module help --name captcha
+fas module help captcha
 
 # 添加内置模块
-fas module add --name captcha
+fas module add captcha
 ```
 
 #### 4.3.1 验证码模块

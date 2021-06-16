@@ -1,4 +1,4 @@
-  
+
 # -*- coding: utf-8 -*-
 #
 # 安装程序
@@ -6,6 +6,7 @@
 # Created Time: 2018年04月02日 星期一 17时29分45秒
 import os
 from distutils.core import setup
+
 
 def read(rel_path):
     # type: (str) -> str

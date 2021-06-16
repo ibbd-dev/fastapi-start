@@ -13,41 +13,60 @@ from .utils import init_file
 from .config_cmd import get_config
 
 
-def module_action(action: str = 'list', name: str = '', title: str = '', desc: str = ''):
+class Module:
     """模块操作（应该在项目的app目录下执行）
 
-    支持的action操作:
-        list: 获取已有可以直接使用的模块列表
-        help: 已有模块的帮助文档
-        add: 添加一个已经实现的模块
-        new: 新建一个全新的模块
+    模块类型有两种：
+    1. 一种是内置模块：已经开发好的模块，可以使用add命令添加
+    2. 另一种是全新模块，使用new命令生成，会自动生成模块的基本目录结构及其文件模板
     Examples:
         fas module list     # 已经实现的模块列表
-        fas module help --name captcha    # 查看模块的帮助文档
-    Args:
-        action str: 模块操作:
-        name str: 模块名（如果后缀不是_module，则会自动加上，减少冲突可能）
-        title str: 模块说明文档标题
-        desc str: 模块描述
+        fas module help captcha    # 查看模块的帮助文档
     """
-    if not name.endswith('_module'):
-        name += '_module'
-    if action == 'list':
+
+    def list(self):
+        """获取已有可以直接使用的模块列表
+        """
         module_list()
-    elif action == 'help':
+
+    def help(self, name: str):
+        """查看内置模块的帮助文档
+        Args:
+            name str: 模块名（如果后缀不是_module，则会自动加上，减少冲突可能）
+        """
+        if not name.endswith('_module'):
+            name += '_module'
         all_modules = module_list(is_return=True)
         if name not in all_modules:
             raise Exception(f'该模块尚未实现: {name}')
         module_help(name)
-    elif action == 'add':
+
+    def add(self, name: str, title: str = '', desc: str = ''):
+        """添加一个内置模块
+
+        可以先使用list命令查看有哪些内置模块
+        Args:
+            name str: 模块名（如果后缀不是_module，则会自动加上，减少冲突可能）
+            title str: 模块说明文档标题
+            desc str: 模块描述
+        """
+        if not name.endswith('_module'):
+            name += '_module'
         all_modules = module_list(is_return=True)
         if name not in all_modules:
             raise Exception(f'该模块尚未实现: {name}')
         module_new(name, title=title, desc=desc, src_module=name)
-    elif action == 'new':
+
+    def new(self, name: str, title: str = '', desc: str = ''):
+        """新建一个全新的模块
+        Args:
+            name str: 模块名（如果后缀不是_module，则会自动加上，减少冲突可能）
+            title str: 模块说明文档标题
+            desc str: 模块描述
+        """
+        if not name.endswith('_module'):
+            name += '_module'
         module_new(name, title=title, desc=desc)
-    else:
-        raise Exception(f'不支持该操作: {action}')
 
 
 def module_help(name):
