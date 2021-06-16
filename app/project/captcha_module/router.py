@@ -32,7 +32,12 @@ async def test_api():
     return {'message': 'ok'}
 
 
-@router.get("/image/{token}", summary='生成验证码图像')
+@router.get("/image/{token}", summary='生成验证码图像',
+            response_class=FileResponse,
+            responses={
+                200: {"content": {"image/png": {}}},
+                500: {"description": "生成验证码异常"},
+            })
 async def captcha_image_api(
     token: str = Path(..., regex='^[0-9a-z]+$', title='表单唯一值，用于标识表单',
                       description='表单唯一值，用于标识表单')
@@ -46,7 +51,7 @@ async def captcha_image_api(
     # print('captcha: ', code)
     if not set_captcha(token, code):
         raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-                            detail='')
+                            detail='生成验证码失败')
     image = ImageCaptcha().generate_image(code)
     with tempfile.NamedTemporaryFile(mode='w+b', suffix='.png', delete=False) as outfile:
         image.save(outfile)
