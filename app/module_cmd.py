@@ -17,9 +17,13 @@ def module_action(action: str = 'list', name: str = '', title: str = '', desc: s
     """模块操作（应该在项目的app目录下执行）
 
     支持的action操作:
-        list: 默认，获取已有可以直接使用的模块列表
+        list: 获取已有可以直接使用的模块列表
+        help: 已有模块的帮助文档
         add: 添加一个已经实现的模块
         new: 新建一个全新的模块
+    Examples:
+        fas module list     # 已经实现的模块列表
+        fas module help --name captcha    # 查看模块的帮助文档
     Args:
         action str: 模块操作:
         name str: 模块名（如果后缀不是_module，则会自动加上，减少冲突可能）
@@ -30,6 +34,11 @@ def module_action(action: str = 'list', name: str = '', title: str = '', desc: s
         name += '_module'
     if action == 'list':
         module_list()
+    elif action == 'help':
+        all_modules = module_list(is_return=True)
+        if name not in all_modules:
+            raise Exception(f'该模块尚未实现: {name}')
+        module_help(name)
     elif action == 'add':
         all_modules = module_list(is_return=True)
         if name not in all_modules:
@@ -39,6 +48,15 @@ def module_action(action: str = 'list', name: str = '', title: str = '', desc: s
         module_new(name, title=title, desc=desc)
     else:
         raise Exception(f'不支持该操作: {action}')
+
+
+def module_help(name):
+    """模块帮助文档"""
+    with open(join(package_path, "project", name, 'README.md'), encoding='utf8') as f:
+        help_text = f.read()
+    print(help_text)
+    help_url = f"https://github.com/ibbd-dev/fastapi-start/tree/main/app/project/{name}"
+    print(f"\n\n在线文档地址：\n    {help_url}")
 
 
 def module_list(is_return=False):

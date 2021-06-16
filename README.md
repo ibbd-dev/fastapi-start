@@ -63,7 +63,7 @@ uvicorn main:app --reload --host 0.0.0.0
 
 # 添加一个模块
 # test是模块名称，可以设定
-fas module --action=new --name=test
+fas module new --name=test
 
 # 添加模块之后，要使模块生效，需要手动在app/main.py文件中注册该路由
 # prefix: 该参数定义路由的前缀，每个模块的路由前缀必须是唯一的
@@ -87,9 +87,9 @@ fas project-init --help
 fas version
 
 # 如果不设置，则自动使用git中的配置user.name及user.email
-fas config --set --author=caiyy --email=caiyy@ibbd.net
+fas config set --author=caiyy --email=caiyy@ibbd.net
 # 设置git clone命令的根目录
-fas config --set --root-path=/var/www/src
+fas config set --root-path=/var/www/src
 
 # 可以查看配置信息
 fas config
@@ -102,7 +102,7 @@ fas clone git@git.ibbd.net:gf/iot-warning.git
 # 代码规范审查
 # 审查当前目录
 fas check
-# 审查指定目录
+# 审查指定目录（假设app是项目代码所在目录）
 fas check app
 # 对于某种类型的问题，可以启用自动修正，如：
 fas check --path app --select=W292 --autopep8 
@@ -187,13 +187,19 @@ Set[int]
 
 模块的路由及其配置文件直接放到模块目录下，而不是将所有路由配置独立到一个目录。
 
-### 4.3 标准化模块
+### 4.3 内置模块
 
-标准化模块，可以使用命令进行快捷添加。
+内置模块，可以使用命令进行快捷添加。
 
 ```sh
 # 支持的模块列表
-fas module --action=list
+fas module list
+
+# 查看某内置模块的帮助文档
+fas module help --name captcha
+
+# 添加内置模块
+fas module add --name captcha
 ```
 
 #### 4.3.1 验证码模块
