@@ -1,9 +1,9 @@
 # -*- coding: utf-8 -*-
 #
 # API接口调用
-# Author: __author__
-# Email: __email__
-# Created Time: __created_time__
+# Author: caiyingyao
+# Email: cyy0523xc@gmail.com
+# Created Time: 2021-06-16
 # redis连接在公共模块里
 from common.connections import get_redis
 

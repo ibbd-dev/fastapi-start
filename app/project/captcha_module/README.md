@@ -5,17 +5,25 @@
 - 1. 增加验证码模块:
 
 ```sh
-fas module --action=add --name=captcha
+fas module add --name=captcha
 ```
 
 - 2. 在系统主入口文件（main.py）注册验证码模块：
 
 ```python
-from captcha_module.api import config as captcha_config
-from captcha_module.router import router as captcha_router
+# 验证码模块需要使用redis
+# 需要初始化redis，可以指定host，port，db等参数
+from common.connections import init_redis
+init_redis('192.168.1.242')   # 初始化redis
 
-captcha_config('192.168.1.242')    # 配置redis host
+# 加载验证码模块
+from captcha_module.router import router as captcha_router
 app.include_router(captcha_router, prefix="/captcha", tags=["验证码模块"])
+
+# 如果需要配置验证码的有效期等
+from captcha_module.api import config as captcha_config
+# 配置验证码有效期，及在redis中的前缀（应该避免和其他业务冲突）
+captcha_config(expire=120, prefix='ctc')
 ```
 
 ## 2. 验证码流程
@@ -30,4 +38,4 @@ app.include_router(captcha_router, prefix="/captcha", tags=["验证码模块"])
 
 ## 3. 模块开发者
 
-- __author__
+- caiyingyao

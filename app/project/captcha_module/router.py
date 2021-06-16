@@ -1,9 +1,9 @@
 # -*- coding: utf-8 -*-
 #
 # 模块路由文件
-# Author: __author__
-# Email: __email__
-# Created Time: __created_time__
+# Author: caiyingyao
+# Email: cyy0523xc@gmail.com
+# Created Time: 2021-06-16
 from fastapi import APIRouter, Path
 from fastapi import status, HTTPException
 import tempfile

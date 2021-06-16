@@ -13,23 +13,27 @@ from .utils import get_user_from_git
 config_file = join(package_path, 'config.json')
 
 
-def config(set: bool = False, author: str = '', email: str = '', root_path: str = ''):
+def config(action: str = 'get', author: str = '', email: str = '', root_path: str = ''):
     """配置author, email，代码根目录等信息
 
+    支持的动作action:
+        get: 默认，获取配置值
+        set: 设置配置值
     Examples:
         获取配置信息（如果没有设置author或者email，则自动从git中获取）:
             fas config
         设置代码根目录（使用clone命令时，需要该目录）：
-            fas config --set --root-path=/var/www
-
+            fas config set --root-path=/var/www
     Args:
-        set bool: 默认该命令是get
+        action str: 默认该命令是get
         author str: 用户名，如果不设置则从git命令中获取（set命令时有效）
         email str: email，如果不设置则从git命令中获取（set命令时有效）
         root_path str: 代码根目录，使用clone命令的时候会在该目录下生成标准的目录路径，如: root_path/github.com/username/project/（set命令时有效）
     """
-    if not set:
+    if action == 'get':
         return get_config()
+    elif action != 'set':
+        raise Exception(f'不支持的action参数: {action}')
 
     if os.path.isfile(config_file):
         with open(config_file, encoding='utf8') as f:
