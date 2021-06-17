@@ -4,13 +4,16 @@
 # Author: caiyingyao
 # Email: cyy0523xc@gmail.com
 # Created Time: 2021-06-16
-from fastapi import APIRouter, Path
-from fastapi import status, HTTPException
-import tempfile
-from starlette.responses import FileResponse
 import random
 import string
+import tempfile
+from redis import Redis
+from fastapi import APIRouter, Path, Depends
+from fastapi import status, HTTPException
+from starlette.responses import FileResponse
 from captcha.image import ImageCaptcha
+
+from common.connections import get_redis
 from schema import MessageResp     # 通用schema
 from .api import set_captcha
 
@@ -40,7 +43,8 @@ async def test_api():
             })
 async def captcha_image_api(
     token: str = Path(..., regex='^[0-9a-z]+$', title='表单唯一值，用于标识表单',
-                      description='表单唯一值，用于标识表单')
+                      description='表单唯一值，用于标识表单'),
+    redis: Redis = Depends(get_redis)
 ):
     """生成验证码图像\n
     表单在生成之前通常会生成一个唯一字符串token，该token值可以用于避免重复提交，也用于请求验证码。\n
@@ -49,7 +53,7 @@ async def captcha_image_api(
     """
     code = ''.join(random.sample(char_all, 4))
     # print('captcha: ', code)
-    if not set_captcha(token, code):
+    if not set_captcha(redis, token, code):
         raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
                             detail='生成验证码失败')
     image = ImageCaptcha().generate_image(code)
