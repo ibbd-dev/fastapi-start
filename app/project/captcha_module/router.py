@@ -19,8 +19,8 @@ from .api import set_captcha
 
 """
 在系统入口main.py文件中加入:
-    from captcha_module.router import router as captcha_router
-    app.include_router(captcha_router, prefix="/captcha", tags=["验证码"])
+from captcha_module.router import router as captcha_router
+app.include_router(captcha_router, prefix="/captcha", tags=["验证码"])
 """
 router = APIRouter()
 

@@ -106,7 +106,7 @@ def clone(uri):
 
 
 def code_check(path='', ignore: str = '', select: str = '', autopep8: bool = False,
-               max_line_length: int = 100):
+               max_line_length: int = 110):
     """代码风格审查
 
     主要使用flake8工具，可以配置忽略哪些问题，或者只审查某些问题。
@@ -126,7 +126,7 @@ def code_check(path='', ignore: str = '', select: str = '', autopep8: bool = Fal
         ignore str: 可以忽略指定类型, 多种类型则用英文逗号隔开。
         select str: 只检测某些类型，默认不开启该选项。
         autopep8 bool: 是否启用自动修复，默认不启用。只有在select模式下该参数才有效。
-        max_line_length int: 每行长度限制，默认值为100
+        max_line_length int: 每行长度限制，默认值为110
     """
     cmd = ''
     _autopep8 = False
