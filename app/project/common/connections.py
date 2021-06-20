@@ -4,6 +4,7 @@
 # Author: __author__
 # Email: __email__
 # Created Time: __created_time__
+from typing import Iterator
 from redis import Redis, ConnectionPool
 
 # redis pool
@@ -16,7 +17,7 @@ def init_redis(host: str, port=6379, db=0):
     _redis_pool = ConnectionPool(host=host, port=port, db=db)
 
 
-def get_redis() -> Redis:
+def get_redis() -> Iterator[Redis]:
     """获取redis操作对象
     每一个请求处理完毕后会关闭当前连接，不同的请求使用不同的连接
     """
