@@ -83,11 +83,9 @@ class Color(IntEnum):
     GREEN = 2
     BLUE = 3
 
-
 class Status(Enum):
     SUCC = 'succ'
     FAIL = 'fail'
-
 
 # 获取键和值
 print(Color.RED.value)
@@ -95,6 +93,23 @@ print(Status.SUCC.value)
 print(Color.RED.name)
 print(Status.SUCC.name)
 ```
+
+枚举类型的派生类型：
+
+```python
+from enum import Flag, auto
+class Color(Flag):
+    RED = auto()
+    BLUE = auto()
+    GREEN = auto()
+
+print(Color.RED.value)
+print(Color.BLUE.value)
+print(Color.BLUE | Color.RED)           # 输出: ColorFlag.BLUE|RED
+print((Color.BLUE & Color.RED).value)   # 输出: 0
+```
+
+标记类型和枚举类型貌似没有多大的区别，不过标记类型可以支持逻辑运算（暂时没看到更多的使用场景）。
 
 ### 2.4 生成器类型
 
@@ -132,5 +147,34 @@ b: UserID = UserID('test')
 
 ### 2.6 静态类型检查器
 
-可以使用`mypy`这个工具，这个工具已经集成进`fastapi-start`脚手架里了。
+可以使用`mypy`这个工具，这个工具已经集成进`fastapi-start`脚手架里了:
 
+```sh
+fas check mypy /path/to/filename.py
+```
+
+## 3. doctest测试
+
+使用doctest进行函数测试及模块测试，使用如：
+
+```python
+"""
+# 模块测试
+>>> test(10)
+21
+"""
+
+def test(i: int) -> int:
+    """函数测试
+    >>> test(10)
+    20
+    """
+    return i * 2
+
+if __name__ == "__main__":
+    import doctest
+    doctest.testmod()
+```
+
+- 函数应该写单元测试，使用doctest就能实现简单的单元测试。
+- 在模块上使用doctest并没有太多的优势，还不如写在`if __name__ == "__main__"`。

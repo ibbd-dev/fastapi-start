@@ -6,7 +6,7 @@
 import re
 import os
 from datetime import datetime
-from typing import Dict, Tuple, List
+from typing import Dict, Tuple, List, Optional, Any
 
 
 def init_file(path: str, author: str, email: str, replaces: Dict[str, str] = {}) -> bool:
@@ -40,7 +40,7 @@ def get_user_from_git() -> Tuple[str, str]:
     return username, email
 
 
-def parse_git_uri(uri) -> Dict[str, str]:
+def parse_git_uri(uri) -> Optional[Dict[str, str]]:
     """解释git的路径
     Args:
         uri str: 格式如git@github.com:group/project.git or https://github.com/group/project
@@ -80,7 +80,7 @@ def flake8_stat(texts: List[str]) -> List[Tuple[str, int, str]]:
     Returns:
         List[List[str, int, str]] 如：['W605', 3, "invalid escape sequence"]，第二个值为统计值
     """
-    data = {}
+    data: Dict[str, Dict[str, Any]] = {}
     pattern = '^.+?: ([A-X]\\d+) ([^\\(]+)'
     for text in texts:
         matches = re.match(pattern, text.strip())
@@ -90,9 +90,9 @@ def flake8_stat(texts: List[str]) -> List[Tuple[str, int, str]]:
                 data[_type] = {'cnt': 0, 'msg': _msg.strip()}
             data[_type]['cnt'] += 1
 
-    data = [(key, val['cnt'], val['msg']) for key, val in data.items()]
-    data = sorted(data, key=lambda x: x[1], reverse=True)
-    return data
+    data_ls = [(key, val['cnt'], val['msg']) for key, val in data.items()]
+    data_ls = sorted(data_ls, key=lambda x: x[1], reverse=True)
+    return data_ls
 
 
 if __name__ == '__main__':
