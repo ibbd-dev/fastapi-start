@@ -1,2 +1,3 @@
 fire
 flake8
+mypy

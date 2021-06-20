@@ -12,7 +12,13 @@
 - [x] 添加模块
 - [x] 生成Python文件
 - [x] 代码风格检测
+- [x] 代码静态类型检测
 - [x] 替代git clone命令的clone命令，并生成标准化的目录路径
+
+### 1.1 内置模块列表
+
+- [x] 验证码
+- [ ] 用户管理
 
 ## 2. 安装说明
 
@@ -113,14 +119,19 @@ fas file readme --title=测试标题 --desc=描述信息
 fas check --help
 
 # 审查当前目录
-fas check
+fas check flake8 --help
+fas check flake8
 
 # 审查指定目录（假设app是项目代码所在目录）
-fas check app
+fas check flake8 app
 
 # 对于某种类型的问题，可以启用自动修正，如：
-fas check --path app --select=W292 --autopep8 
+fas check flake8 --path app --select=W292 --autopep8 
 # 不过使用自动修正时要注意检查比较
+
+# 代码静态风格检测
+fas check mypy --help
+fas check mypy /path/to/filename.py
 ```
 
 使用说明：
