@@ -11,6 +11,60 @@
 - Python版本选择3.8或者以上；
 - 在pep8中代码行的字符串限制为80个字符，这个在有点少，我们放宽到110个字符。
 
+### 1.1 一些之前不太注意的规范
+
+- 不要讲lambda定义的匿名函数赋值给一个变量
+
+Yes:
+
+```python
+def f(x): return 2*x
+```
+
+No:
+
+```python
+f = lambda x: 2*x
+```
+
+- 不要讲return语句也放在`try...except`中
+
+Yes:
+
+```python
+try:
+    value = collection[key]
+except KeyError:
+    return key_not_found(key)
+else:
+    return handle_value(value)
+```
+
+No:
+
+```python
+try:
+    # Too broad!
+    return handle_value(collection[key])
+except KeyError:
+    # Will also catch KeyError raised by handle_value()
+    return key_not_found(key)
+```
+
+- 优先使用`startswith`, `endswith`, `isinstance`等
+
+Yes:
+
+```python
+if foo.startswith('bar'):
+```
+
+No:
+
+```python
+if foo[:3] == 'bar':
+```
+
 ## 2. 类型提示
 
 ### 2.1 简单类型
@@ -105,7 +159,7 @@ class Color(Flag):
 
 print(Color.RED.value)
 print(Color.BLUE.value)
-print(Color.BLUE | Color.RED)           # 输出: ColorFlag.BLUE|RED
+print(Color.BLUE | Color.RED)   # 输出: ColorFlag.BLUE|RED
 print((Color.BLUE & Color.RED).value)   # 输出: 0
 ```
 
@@ -153,6 +207,8 @@ b: UserID = UserID('test')
 fas check mypy /path/to/filename.py
 ```
 
+不过测试使用下来，这个工具不是太智能，未必都应该修复。
+
 ## 3. doctest测试
 
 使用doctest进行函数测试及模块测试，使用如：
@@ -179,3 +235,6 @@ if __name__ == "__main__":
 - 函数应该写单元测试，使用doctest就能实现简单的单元测试。
 - 在模块上使用doctest并没有太多的优势，还不如写在`if __name__ == "__main__"`。
 - 不过doctest没法实现复杂的测试，那还是得用专用的单元测试工具。
+
+## 4. 单元测试
+
