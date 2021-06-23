@@ -4,5 +4,11 @@
     ],
     "python.analysis.extraPaths": [
         "./app"
-    ]
+    ],
+    "files.exclude": {
+        "**/__pycache__": true,
+        "**/.mypy_cache": true,
+        "build": true,
+        "*.egg-info": true
+    }
 }
