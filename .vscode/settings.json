@@ -6,7 +6,9 @@
         "./app"
     ],
     "files.exclude": {
-        "**/__pycache__": true,
+        "*/__pycache__": true,
+        "*/*/__pycache__": true,
+        "*/*/*/__pycache__": true,
         "build": true,
         "*.egg-info": true
     }
