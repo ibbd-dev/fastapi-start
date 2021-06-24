@@ -10,8 +10,13 @@ from .utils import flake8_stat
 
 
 class CodeCheck:
-    """代码审查"""
- 
+    """代码审查
+
+    支持功能：
+    1. PEP8代码风格检查
+    2. 代码静态类型检查
+    """
+
     def mypy(self, path):
         """mypy代码静态类型检查
 
@@ -21,7 +26,7 @@ class CodeCheck:
         """
         os.system(f'mypy {path}')
 
-    def flake8(self, path='', ignore: str = '', select: str = '', 
+    def flake8(self, path='', ignore: str = '', select: str = '',
                autopep8: bool = False, max_line_length: int = 110):
         """PEP8代码风格审查
 

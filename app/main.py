@@ -4,7 +4,6 @@
 # Author: alex
 # Created Time: 2021年06月09日 星期三
 import fire
-# from typing import Dict
 from .settings import VERSION
 from .cmd import project_init
 from .cmd import clone
@@ -29,7 +28,7 @@ def main():
         'project-init': project_init,
         'module': Module(),
         'file': File(),
-        'check': CodeCheck,
+        'check': CodeCheck(),
     })
 
 

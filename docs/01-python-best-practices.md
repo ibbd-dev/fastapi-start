@@ -11,6 +11,62 @@
 - Python版本选择3.8或者以上；
 - 在pep8中代码行的字符串限制为80个字符，这个在有点少，我们放宽到110个字符。
 
+### 1.1 一些之前不太注意的规范
+
+以下几个规范来源官方文档：
+
+- 不要讲lambda定义的匿名函数赋值给一个变量
+
+Yes:
+
+```python
+def f(x): return 2*x
+```
+
+No:
+
+```python
+f = lambda x: 2*x
+```
+
+- 不要讲return语句也放在`try...except`中
+
+Yes:
+
+```python
+try:
+    value = collection[key]
+except KeyError:
+    return key_not_found(key)
+else:
+    return handle_value(value)
+```
+
+No:
+
+```python
+try:
+    # Too broad!
+    return handle_value(collection[key])
+except KeyError:
+    # Will also catch KeyError raised by handle_value()
+    return key_not_found(key)
+```
+
+- 优先使用`startswith`, `endswith`, `isinstance`等
+
+Yes:
+
+```python
+if foo.startswith('bar'):
+```
+
+No:
+
+```python
+if foo[:3] == 'bar':
+```
+
 ## 2. 类型提示
 
 ### 2.1 简单类型
@@ -83,11 +139,9 @@ class Color(IntEnum):
     GREEN = 2
     BLUE = 3
 
-
 class Status(Enum):
     SUCC = 'succ'
     FAIL = 'fail'
-
 
 # 获取键和值
 print(Color.RED.value)
@@ -95,6 +149,23 @@ print(Status.SUCC.value)
 print(Color.RED.name)
 print(Status.SUCC.name)
 ```
+
+枚举类型的派生类型：
+
+```python
+from enum import Flag, auto
+class Color(Flag):
+    RED = auto()
+    BLUE = auto()
+    GREEN = auto()
+
+print(Color.RED.value)
+print(Color.BLUE.value)
+print(Color.BLUE | Color.RED)   # 输出: ColorFlag.BLUE|RED
+print((Color.BLUE & Color.RED).value)   # 输出: 0
+```
+
+标记类型和枚举类型貌似没有多大的区别，不过标记类型可以支持逻辑运算（暂时没看到更多的使用场景）。
 
 ### 2.4 生成器类型
 
@@ -132,5 +203,51 @@ b: UserID = UserID('test')
 
 ### 2.6 静态类型检查器
 
-可以使用`mypy`这个工具，这个工具已经集成进`fastapi-start`脚手架里了。
+可以使用`mypy`这个工具，这个工具已经集成进`fastapi-start`脚手架里了:
 
+```sh
+fas check mypy /path/to/filename.py
+```
+
+不过测试使用下来，这个工具不是太智能，未必都应该修复。
+
+## 3. doctest测试
+
+使用doctest进行函数测试及模块测试，使用如：
+
+```python
+"""
+# 模块测试
+>>> test(10)
+21
+"""
+
+def test(i: int) -> int:
+    """函数测试
+    >>> test(10)
+    20
+    """
+    return i * 2
+
+if __name__ == "__main__":
+    import doctest
+    doctest.testmod()
+```
+
+- 函数应该写一些简单的单元测试，有一定的优势，这样会变成文档的一部分，带有example的作用。
+- 在模块上使用doctest并没有太多的优势，还不如写在`if __name__ == "__main__"`。
+- 不过doctest没法实现复杂的测试，那还是得用专用的单元测试工具。
+
+## 4. 单元测试
+
+工具：pytest
+
+## 5. 数据库迁移
+
+工具：Alembic
+
+## 6. 异常重试
+
+工具：tenacity
+
+## 7
