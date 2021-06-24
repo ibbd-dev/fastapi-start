@@ -28,7 +28,7 @@ def main():
         'project-init': project_init,
         'module': Module(),
         'file': File(),
-        'check': CodeCheck,
+        'check': CodeCheck(),
     })
 
 

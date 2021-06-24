@@ -7,3 +7,10 @@ def fib(n: int) -> Iterator[int]:
         a, b = b, a+b
 
 print(next(fib(5)))
+
+
+def test(n: str) -> None:
+    print(n)
+
+
+test(23)
