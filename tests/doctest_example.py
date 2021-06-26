@@ -6,14 +6,14 @@
 # Created Time: 2021-06-20
 """
 # 模块测试
->>> test(10)
+>>> func(10)
 20
 """
 
 
-def test(i: int) -> int:
+def func(i: int) -> int:
     """函数测试
-    >>> test(10)
+    >>> func(10)
     21
     """
     return i * 2
