@@ -69,6 +69,8 @@ if foo[:3] == 'bar':
 
 ## 2. 类型提示
 
+- [Python Type Checking (Guide)](https://realpython.com/python-type-checking/)
+
 ### 2.1 简单类型
 
 Python的简单类型包括：布尔值，整型，浮点型，字符串。
@@ -167,13 +169,13 @@ print((Color.BLUE & Color.RED).value)   # 输出: 0
 
 标记类型和枚举类型貌似没有多大的区别，不过标记类型可以支持逻辑运算（暂时没看到更多的使用场景）。
 
-### 2.4 生成器类型
+### 2.4 其他一些特别的类型
 
-函数返回生成器时，应该定义明确的返回值类型：
 
 ```python
-from typing import Iterator
+from typing import Iterator, NoReturn
 
+# 函数返回生成器时，应该定义明确的返回值类型（生成器类型）：
 def fib(n: int) -> Iterator[int]:
     a, b = 0, 1
     while a < n:
@@ -181,6 +183,10 @@ def fib(n: int) -> Iterator[int]:
         a, b = b, a+b
 
 print(next(fib(5)))
+
+# 当函数没有明确的返回时，明确定义
+def black_hole() -> NoReturn:
+    raise Exception("There is no going back ...")
 ```
 
 ### 2.5 自定义类型
@@ -211,7 +217,7 @@ fas check mypy /path/to/filename.py
 
 不过测试使用下来，这个工具不是太智能，未必都应该修复。
 
-## 3. doctest测试
+## 3. 关于doctest测试
 
 使用doctest进行函数测试及模块测试，使用如：
 
@@ -236,11 +242,93 @@ if __name__ == "__main__":
 
 - 函数应该写一些简单的单元测试，有一定的优势，这样会变成文档的一部分，带有example的作用。
 - 在模块上使用doctest并没有太多的优势，还不如写在`if __name__ == "__main__"`。
-- 不过doctest没法实现复杂的测试，那还是得用专用的单元测试工具。
+- 不过doctest没法实现复杂的测试，那还是得用专用的单元测试工具。而且doctest并不只是校验返回值，如果在函数了加了一个print，就会导致测试不通过，不太友好。
+
+所以，**doctest仅作为example是不错的，单元测试还是应该使用更加专业的工具**。
 
 ## 4. 单元测试
 
-工具：pytest
+对于单元测试，我们的总的原则是：单元测试要写，但是又不能将单元测试搞得太复杂，花太多的精力在这上面。
+
+单元测试工具选用`pytest`（这个工具和`go test`有点类似），简单的使用：
+
+```python
+# 文件: example.py
+def func(i: int) -> int:
+    return i * 2
+
+# 文件: example_test.py
+from .example import func
+def test_func():
+    assert func(10) == 20
+    assert func(20) == 30
+```
+
+在相同的目录下执行命令`pytest`，该命令会自动找到`*_test.py`的文件（注意：当前目录需要文件__init__.py）执行测试用例。显然这个单元测试是不通过的，报错信息如下：
+
+```python
+    def test_func():
+        assert func(10) == 20
+>       assert func(20) == 30
+E       assert 40 == 30
+E        +  where 40 = func(20)
+
+doctest_example_test.py:7: AssertionError
+```
+
+`pytest`可以递归自动发现测试文件，在使用过程中，也支持执行指定用例：
+
+- 指定测试文件路径 `pytest /path/to/test/file.py`
+- 指定测试类 `pytest /path/to/test/file.py:TestCase`
+- 指定测试方法 `pytest another.test::TestClass::test_method`
+- 指定测试函数 `pytest /path/to/test/file.py:test_function`
+
+关于单元测试，我们定义几个**使用规范**：
+
+1. 我们写的函数或者类等，要时刻保持可测试的状态（或者说叫可观测状态）。
+2. 测试用例文件名要对应，例如文件名为`filename.py`，则对应的测试用例文件名为`filename_test.py`。
+3. 测试函数名要对应，例如业务函数名为`func_name`，则对应的测试函数名为`test_func_name`。
+4. 测试类名要对应，例如原类名为`ClassName`，则对应测试类名为`TestClassName`。
+5. 建议测试用例文件和功能文件放在相同目录下，方便查找，通常不需要一个单独的测试目录。
+6. 优先考虑使用参数化测试：
+
+```python
+# 前面那个测试用例其实应该优化成这样：
+import pytest
+
+# 这里数据的部分完全可以定义成一个变量
+# 这样就不必重复写很多个assert语句了
+@pytest.mark.parametrize("params, expected", [([10], 20), ([20], 30)])
+def test_func2(params, expected):
+    assert func(*params) == expected
+```
+
+同样，执行之后，测试也是不通过的：
+
+```python
+    @pytest.mark.parametrize("params, expected", [([10], 20), ([20], 30)])
+    def test_func2(params, expected):
+>       assert func(*params) == expected
+E       assert 40 == 30
+E        +  where 40 = func(*[20])
+
+doctest_example_test.py:18: AssertionError
+```
+
+如果把这个`parametrize`函数进行封装的话，应该可以做到更加简单，例如单元测试只要描述输入输出即可：
+
+```python
+test_data = [
+    (func, [10], {}, 20), 
+    (func, [20], {}, 30)
+]
+
+@pytest.mark.parametrize("action, args, kwargs, expected", test_data)
+def test_all_func(action, args, kwargs, expected):
+    assert action(*args, **kwargs) == expected
+```
+
+这样，只要专注写好测试用例即可。
 
 ## 5. 数据库迁移
 
