@@ -101,4 +101,4 @@ def clone(uri):
     if os.path.isdir(project_path):
         raise Exception(f'项目路径已经存在，确认是否冲突：{project_path}')
     os.makedirs(project_path)
-    os.system(f"git clone {uri} to {project_path}")
+    os.system(f"git clone {uri} {project_path}")
