@@ -2,3 +2,4 @@ fire
 flake8
 pep8-naming
 mypy
+virtualenv

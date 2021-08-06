@@ -8,7 +8,7 @@ import os
 from os.path import join
 import shutil
 from .settings import package_path
-from .utils import init_file, parse_git_uri
+from .utils import init_file, parse_git_uri, shell
 from .config_cmd import get_config
 
 
@@ -55,6 +55,14 @@ def project_init(project_name: str, title='', desc=''):
     init_file(join(project_name, 'README.md'), cfg['author'], cfg['email'],
               replaces=replaces)
     print('--> ok.')
+
+    # 创建python虚拟环境
+    shell('virtualenv venv', cd=project_name)
+    if not os.path.isdir(join(project_name, 'venv')):
+        shutil.rmtree(project_name)
+        raise Exception('创建Python虚拟环境不成功')
+    else:
+        print('Python虚拟环境安装到目录：venv。使用帮助：virtualenv --help')
 
     # 复制app目录
     print('copy and parse app files...')
