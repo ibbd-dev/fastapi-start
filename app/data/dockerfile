@@ -10,7 +10,13 @@ RUN apt-get update -y \
     && apt-get install -y --no-install-recommends \
         git \
     && apt-get clean \
-    && rm -r /var/lib/apt/lists/* 
+    && rm -r /var/lib/apt/lists/*
+
+#  国内源
+RUN pip3 config set global.index-url https://mirrors.aliyun.com/pypi/simple/
+# RUN pip3 config set global.index-url http://mirrors.cloud.tencent.com/pypi/simple
+# RUN pip3 config set global.index-url http://pypi.douban.com/simple/
+# RUN pip3 config set global.index-url https://pypi.tuna.tsinghua.edu.cn/simple
 
 # install fastapi
 COPY ./requirements.txt /

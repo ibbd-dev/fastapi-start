@@ -28,9 +28,15 @@ def init_file(path: str, author: str, email: str, replaces: Dict[str, str] = {})
     return True
 
 
-def shell(cmd: str, ) -> str:
+def shell(cmd: str, cd: Optional[str] = None) -> str:
     """执行命令"""
-    return os.popen(cmd).read().strip()
+    root_dir = os.getcwd()
+    if cd is not None:
+        os.chdir(cd)
+    res = os.popen(cmd).read().strip()
+    if cd is not None:
+        os.chdir(root_dir)
+    return res
 
 
 def get_user_from_git() -> Tuple[str, str]:

@@ -45,6 +45,27 @@ git clone https://github.com/ibbd-dev/fastapi-start
 cd fastapi-start
 pip install -r requiresment.txt
 easy_install .
+
+# 测试
+fas
+```
+
+说明：执行fas命令时如果报错：
+
+```
+Traceback (most recent call last):
+  File "D:\Apps\Anaconda3\Scripts\fas-script.py", line 33, in <module>
+    sys.exit(load_entry_point('fastapi-start==0.6.7', 'console_scripts', 'fas')())
+  File "D:\Apps\Anaconda3\Scripts\fas-script.py", line 25, in importlib_load_entry_point
+    return next(matches).load()
+StopIteration
+```
+
+解决：
+
+```sh
+cd /mnt/d/Apps/Anaconda3/Lib/site-packages
+rm -rf fastapi_start*
 ```
 
 ## 3. 使用说明
@@ -63,6 +84,10 @@ easy_install .
 # test是项目名称，可以指定为自己的项目名称
 # --title and --desc: 项目的标题及描述
 fas project-init test --title=测试项目 --desc=这是一个测试项目
+
+# 实际开发强烈建议使用虚拟环境
+# 使用帮助：
+virtualenv --help
 
 # 项目根目录
 # 项目代码目录
@@ -130,7 +155,7 @@ fas check flake8
 fas check flake8 app
 
 # 对于某种类型的问题，可以启用自动修正，如：
-fas check flake8 --path app --select=W292 --autopep8 
+fas check flake8 --path app --select=W292 --autopep8
 # 不过使用自动修正时要注意检查比较
 
 # 代码静态风格检测
@@ -149,6 +174,7 @@ fas check mypy /path/to/filename.py
 
 重要规则说明：
 
+- 开发测试强烈建议使用虚拟环境进行（或者直接使用docker），部署则使用docker
 - 使用4个空格缩进，换行符使用`\n`（vscode编辑器需要配置为LF，而不是CRLF）
 - 文件统一使用UTF-8编码
 - 接口响应的异常类型使用HTTP的状态码
@@ -190,13 +216,14 @@ Set[int]
 
 ```sh
 .
-├── app
+├── venv                         # python虚拟环境目录
+├── app                          # 项目主目录
 │   ├── __init__.py
 │   ├── readme.md                # 接口的描述文档
 │   ├── main.py                  # 主入口文件
 │   ├── schema.py                # 通用schema
 │   ├── settings.py              # 配置文件
-│   ├── dependencies.py          # 
+│   ├── dependencies.py          #
 │   ├── exceptions.py            # 异常相关
 │   ├── utile.py                 # 通用的工具函数
 │   ├── common                   # 公共模块
