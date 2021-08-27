@@ -3,21 +3,26 @@
 # 配置相关命令
 # Author: alex
 # Created Time: 2021年06月13日 星期日
-import os
-from os.path import join
+from os import mkdir
+from os.path import join, isdir, isfile, expanduser
 import json
 from typing import Dict
-from .settings import package_path
+# from .settings import package_path
 from .utils import get_user_from_git
 
-config_file = join(package_path, 'config.json')
+# 工具的配置目录
+config_path = join(expanduser('~'), '.fastapi-start')
+config_file = join(config_path, 'config.json')
+if not isdir(config_path):
+    mkdir(config_path)
 
 
 class Config:
-    """配置author, email，代码根目录等信息
+    """配置代码根目录等信息
+    配置文件的保存目录为: 用户目录/.fastapi-start/
 
     Examples:
-        获取配置信息（如果没有设置author或者email，则自动从git中获取）:
+        获取配置信息（author和email直接从git的配置中获取）：
             fas config get
         设置代码根目录（使用clone命令时，需要该目录）：
             fas config set --root-path=/var/www
@@ -28,29 +33,24 @@ class Config:
         """
         return get_config()
 
-    def set(self, author: str = '', email: str = '', root_path: str = ''):
+    def set(self, root_path: str = ''):
         """设置配置变量
         Args:
-            author str: 用户名，如果不设置则从git命令中获取
-            email str: email，如果不设置则从git命令中获取
             root_path str: 代码根目录，使用clone命令的时候会在该目录下生成标准的目录路径，如: root_path/github.com/username/project/
         """
-        config_set(author=author, email=email, root_path=root_path)
+        config_set(root_path=root_path)
 
 
-def config_set(author: str = '', email: str = '', root_path: str = ''):
+def config_set(root_path: str = ''):
     """"""
-    if os.path.isfile(config_file):
+    if isfile(config_file):
         with open(config_file, encoding='utf8') as f:
             data = json.load(f)
     else:
         data = {}
-    if author:
-        data['author'] = author
-    if email:
-        data['email'] = email
+
     if root_path:
-        if not os.path.isdir(root_path):
+        if not isdir(root_path):
             raise Exception(f'代码根目录不是有效目录：{root_path}')
         data['root_path'] = root_path
     if data:
@@ -60,16 +60,14 @@ def config_set(author: str = '', email: str = '', root_path: str = ''):
 
 def get_config() -> Dict[str, str]:
     """获取配置信息
+    用户名及Email从git配置获取
     Returns:
         dict
     """
-    if not os.path.isfile(config_file):
-        author, email = get_user_from_git()
-        if author == '':
-            raise Exception("需要先设置用户名，帮助文档:\n    fastapi-start config --help")
+    author, email = get_user_from_git()
+    if not isfile(config_file):
         return {'author': author, 'email': email}
     with open(config_file, encoding='utf8') as f:
         data = json.load(f)
-    if 'author' not in data or data['author'] == '':
-        data['author'], data['email'] = get_user_from_git()
+    data['author'], data['email'] = author, email
     return data
