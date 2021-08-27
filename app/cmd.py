@@ -23,7 +23,7 @@ def project_init(project_name: str, title='', desc=''):
         desc str: 项目描述（显示在交互式文档中）
     """
     # 创建项目目录
-    name_pattern = '^[a-z0-9\\-]{4,20}$'
+    name_pattern = '^[a-z0-9\\-]{2,20}$'
     if re.match(name_pattern, project_name):
         print("project name check ok")
     else:
