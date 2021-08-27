@@ -124,8 +124,6 @@ fas project-init --help
 # 查看版本号
 fas version
 
-# 如果不设置，则自动使用git中的配置user.name及user.email
-fas config set --author=caiyy --email=caiyy@ibbd.net
 # 设置git clone命令的根目录
 fas config set --root-path=/var/www/src
 
@@ -133,9 +131,9 @@ fas config set --root-path=/var/www/src
 fas config get
 
 # clone项目
-# 项目会自动保存到规范化的目录中：{root-path}/git.ibbd.net/gf/iot-warning
+# 项目会自动保存到规范化的目录中：{root-path}/git.ibbd.net/gf/iot-test
 # root-path就是前面设置的配置： fas config set --root-path=/var/www/src
-fas clone git@git.ibbd.net:gf/iot-warning.git
+fas clone git@git.ibbd.net:gf/iot-test.git
 
 # 在当前目录生成README.md
 fas file readme --title=测试标题 --desc=描述信息
