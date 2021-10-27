@@ -124,4 +124,9 @@ def module_new(module_name: str, title: str = '', desc: str = '', src_module: st
         if not init_file(join(module_name, filename), cfg['author'], cfg['email'], replaces=replaces):
             raise Exception('init file error: ' + join(module_name, filename))
     print('--> ok.')
+    if module_name.endswith('_module'):
+        module_name = module_name[:-len('_module')]
     print(f'init module: {module_name} ok.')
+    print('\n在入口文件(main.py)中加入引用代码：')
+    print(f'from {module_name}_module.router import router as {module_name}_router')
+    print(f'app.include_router({module_name}_router, prefix="/{module_name}", tags=["{title}"])')

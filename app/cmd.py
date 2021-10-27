@@ -12,7 +12,7 @@ from .utils import init_file, parse_git_uri, shell
 from .config_cmd import get_config
 
 
-def project_init(project_name: str, title='', desc=''):
+def project_init(project_name: str, title: str = '', desc: str = '', create_dir: bool = True):
     """项目初始化
 
     Examples:
@@ -21,15 +21,22 @@ def project_init(project_name: str, title='', desc=''):
         project_name str: 项目名（目录名）
         title str: 项目标题（显示在交互式文档中）
         desc str: 项目描述（显示在交互式文档中）
+        create_dir bool: 当该值为true的时候，会自动创建项目目录
     """
     # 创建项目目录
-    name_pattern = '^[a-z0-9\\-]{4,20}$'
+    name_pattern = '^[a-z0-9\\-]{2,100}$'
     if re.match(name_pattern, project_name):
         print("project name check ok")
     else:
         raise Exception(f'project name check error: {name_pattern}')
-    if os.path.isdir(project_name):
-        raise Exception(f"project name: {project_name} is existed!")
+    if create_dir:
+        create_dir = False if type(create_dir) == str or create_dir.strip().lower() in ('f', 'false') else True
+    else:
+        create_dir = False
+    print(f"Param create_dir = {create_dir}")
+    if create_dir == os.path.isdir(project_name):
+        raise Exception(f"Project dir {project_name}: {os.path.isdir(project_name)}")
+
     os.mkdir(project_name)
     if len(title) == 0:
         title = project_name
