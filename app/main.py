@@ -5,7 +5,7 @@
 # Created Time: 2021年06月09日 星期三
 import fire
 from .settings import VERSION
-from .cmd import project_init
+from .cmd import Project
 from .cmd import clone
 from .config_cmd import Config
 from .file_cmd import File
@@ -24,8 +24,7 @@ def main():
         'version': version,
         'clone': clone,            # 替代git clone命令
         'config': Config(),
-
-        'project-init': project_init,
+        'project': Project(),
         'module': Module(),
         'file': File(),
         'check': CodeCheck(),
