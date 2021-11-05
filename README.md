@@ -68,6 +68,8 @@ cd /mnt/d/Apps/Anaconda3/Lib/site-packages
 rm -rf fastapi_start*
 ```
 
+说明：以上都只在windows和ubuntu上测试通过，还没在mac上有测试过。
+
 ## 3. 使用说明
 
 安装成功之后，会有两个命令
@@ -80,18 +82,22 @@ rm -rf fastapi_start*
 ### 3.1 项目日常使用
 
 ```sh
-# 项目初始化
+# 创建一个test新项目并初始化
 # test是项目名称，可以指定为自己的项目名称
 # --title and --desc: 项目的标题及描述
-fas project-init test --title=测试项目 --desc=这是一个测试项目
+fas project create test --title=测试项目 --desc=这是一个测试项目
+cd test
+
+# 或者如果项目目录已经存在，如项目目录test已经存在，则先去到该目录
+cd test
+fas project init --title=测试项目 --desc=这是一个测试项目
 
 # 实际开发强烈建议使用虚拟环境
 # 使用帮助：
 virtualenv --help
 
-# 项目根目录
 # 项目代码目录
-cd test/app
+cd app
 
 # 启动http服务
 uvicorn main:app --reload --host 0.0.0.0
@@ -119,7 +125,9 @@ fas file python test
 fas --help
 
 # 某个命令的帮助文档
-fas project-init --help
+fas project --help
+fas project init --help
+fas project create --help
 
 # 查看版本号
 fas version
