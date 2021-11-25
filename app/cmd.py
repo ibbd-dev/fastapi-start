@@ -80,7 +80,7 @@ def project_init(project_name: str, title: str = '', desc: str = ''):
     os.mkdir(".vscode")
     shutil.copyfile(join(package_path, 'data', 'vscode_settings.json'),
                     join(".vscode", "settings.json"))
-    shutil.copyfile(join(package_path, 'data', 'gitignore'), ".gitignone")
+    shutil.copyfile(join(package_path, 'data', 'gitignore'), ".gitignore")
     shutil.copyfile(join(package_path, 'data', 'Dockerfile'), 'Dockerfile')
     shutil.copyfile(join(package_path, 'data', 'requirements.txt'), 'requirements.txt')
     init_file('Dockerfile', cfg['author'], cfg['email'])
@@ -105,9 +105,14 @@ def project_init(project_name: str, title: str = '', desc: str = ''):
     for filename in os.listdir(src_path):
         if not filename.endswith(('.py', '.md')):
             continue   # 如果不是py文件或者md文件
-        shutil.copyfile(join(src_path, filename), join(dst_path, filename))
-        if not init_file(join(dst_path, filename), cfg['author'], cfg['email'], replaces=replaces):
-            raise Exception('init file error: ' + join(dst_path, filename))
+        if filename == 'settings.py':
+            dst_filename = 'settings-example.py'
+        else:
+            dst_filename = filename
+
+        shutil.copyfile(join(src_path, filename), join(dst_path, dst_filename))
+        if not init_file(join(dst_path, dst_filename), cfg['author'], cfg['email'], replaces=replaces):
+            raise Exception('init file error: ' + join(dst_path, dst_filename))
 
     src_path = join(src_path, 'common')
     dst_path = join(dst_path, 'common')
