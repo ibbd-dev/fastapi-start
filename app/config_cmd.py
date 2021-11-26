@@ -55,10 +55,10 @@ class Config:
             mysql_cfg = f.read()
         for fname in exist_files:
             print(f'配置写入文件：{fname}')
-            with open(fname, 'a+', encoding='utf8') as f:
+            with open(fname, 'a+', encoding='utf8', newline='\n') as f:
                 f.write(mysql_cfg)
 
-    def gen_api(self, router: str, title: str = '', method: str = 'POST',
+    def gen_api(self, router: str, method: str = 'POST', title: str = '',
                 router_file='router.py', schema_file='schema.py'):
         """生成API接口基本代码
 
@@ -93,9 +93,9 @@ class Config:
         params_text = schema_params.replace('__key__', key)
         if method == 'GET':
             api_text = api_get.replace('__def__', def_name).replace('__key__', key).replace('__title__', title).replace('__router__', router)
-            with open(router_file, 'a+', encoding='utf8') as f:
+            with open(router_file, 'a+', encoding='utf8', newline='\n') as f:
                 f.write(api_text)
-            with open(schema_file, 'a+', encoding='utf8') as f:
+            with open(schema_file, 'a+', encoding='utf8', newline='\n') as f:
                 f.write(params_text)
             print(f'在文件{router_file}和{schema_file}中生成了相应的代码。')
             return
@@ -103,9 +103,9 @@ class Config:
         # POST
         resp_text = schema_resp.replace('__key__', key)
         api_text = api_post.replace('__def__', def_name).replace('__key__', key).replace('__title__', title).replace('__router__', router)
-        with open(router_file, 'a+', encoding='utf8') as f:
+        with open(router_file, 'a+', encoding='utf8', newline='\n') as f:
             f.write(api_text)
-        with open(schema_file, 'a+', encoding='utf8') as f:
+        with open(schema_file, 'a+', encoding='utf8', newline='\n') as f:
             f.write(params_text)
             f.write(resp_text)
         print(f'在文件{router_file}和{schema_file}中生成了相应的代码。')
