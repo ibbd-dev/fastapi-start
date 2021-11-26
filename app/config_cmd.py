@@ -6,9 +6,10 @@
 from os import mkdir
 from os.path import join, isdir, isfile, expanduser
 import json
-from typing import Dict
-# from .settings import package_path
+from typing import Dict, Optional
 from .utils import get_user_from_git
+from .settings import package_path
+from .api_config import api_get, api_post, schema_params, schema_resp
 
 # 工具的配置目录
 config_path = join(expanduser('~'), '.fastapi-start')
@@ -39,6 +40,75 @@ class Config:
             root_path str: 代码根目录，使用clone命令的时候会在该目录下生成标准的目录路径，如: root_path/github.com/username/project/
         """
         config_set(root_path=root_path)
+
+    def mysql(self, settings_file: Optional[str] = None):
+        """MySQL配置常量：把变量加入到对应的settings.py及settings-example.py文件中
+        """
+        files = [settings_file] if settings_file else ['settings.py', 'settings-example.py']
+        exist_files = [f for f in files if isfile(f)]
+        if len(exist_files) == 0:
+            print(f"对应的配置文件不存在：{files}")
+            return
+        print(f"存在的配置文件：{exist_files}")
+
+        with open(join(package_path, 'data', 'mysql_cfg.py'), encoding='utf8') as f:
+            mysql_cfg = f.read()
+        for fname in exist_files:
+            print(f'配置写入文件：{fname}')
+            with open(fname, 'a+', encoding='utf8') as f:
+                f.write(mysql_cfg)
+
+    def gen_api(self, router: str, title: str = '', method: str = 'post',
+                router_file='router.py', schema_file='schema.py'):
+        """生成API接口基本代码
+
+        Args:
+            method: str, http方法，取值为post或者get，默认为post
+        """
+        if method.lower() not in ('post', 'get'):
+            print(f"method只能取值：post or get")
+            return
+        method = method.lower()
+        # 规范路由样式
+        router = router.strip().lower()
+        if not router.startswith('/'):
+            print(f"router参数必须以/开头: {router}")
+            return
+        if ' ' in router:
+            print(f"router参数不能带有空格: {router}")
+            return
+        if '_' in router:
+            print(f"router参数值不建议使用下划线: {router}")
+            print("可以将下划线改成使用/来替代，例如：/a_b => /a/b")
+            return
+        if not isfile(router_file):
+            print(f"{router_file}: router文件不存在")
+            return
+        if not isfile(schema_file):
+            print(f"{schema_file}: schema文件不存在")
+            return
+        # 生成函数名
+        def_name = router.strip('/').replace('/', '_')
+        key = ''.join([k.title() for k in def_name.split('_')])
+        params_text = schema_params.replace('__key__', key)
+        if method == 'get':
+            api_text = api_get.replace('__def__', def_name).replace('__key__', key).replace('__title__', title).replace('__router__', router)
+            with open(router_file, 'a+', encoding='utf8') as f:
+                f.write(api_text)
+            with open(schema_file, 'a+', encoding='utf8') as f:
+                f.write(params_text)
+            print(f'在文件{router_file}和{schema_file}中生成了相应的代码。')
+            return
+
+        # post
+        resp_text = schema_resp.replace('__key__', key)
+        api_text = api_post.replace('__def__', def_name).replace('__key__', key).replace('__title__', title).replace('__router__', router)
+        with open(router_file, 'a+', encoding='utf8') as f:
+            f.write(api_text)
+        with open(schema_file, 'a+', encoding='utf8') as f:
+            f.write(params_text)
+            f.write(resp_text)
+        print(f'在文件{router_file}和{schema_file}中生成了相应的代码。')
 
 
 def config_set(root_path: str = ''):
