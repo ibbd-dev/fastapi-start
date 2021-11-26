@@ -58,17 +58,17 @@ class Config:
             with open(fname, 'a+', encoding='utf8') as f:
                 f.write(mysql_cfg)
 
-    def gen_api(self, router: str, title: str = '', method: str = 'post',
+    def gen_api(self, router: str, title: str = '', method: str = 'POST',
                 router_file='router.py', schema_file='schema.py'):
         """生成API接口基本代码
 
         Args:
-            method: str, http方法，取值为post或者get，默认为post
+            method: str, http方法，取值为POST或者GET，默认为POST
         """
-        if method.lower() not in ('post', 'get'):
-            print(f"method只能取值：post or get")
+        method = method.upper()
+        if method not in ('POST', 'GET'):
+            print(f"method只能取值：POST or GET")
             return
-        method = method.lower()
         # 规范路由样式
         router = router.strip().lower()
         if not router.startswith('/'):
@@ -91,7 +91,7 @@ class Config:
         def_name = router.strip('/').replace('/', '_')
         key = ''.join([k.title() for k in def_name.split('_')])
         params_text = schema_params.replace('__key__', key)
-        if method == 'get':
+        if method == 'GET':
             api_text = api_get.replace('__def__', def_name).replace('__key__', key).replace('__title__', title).replace('__router__', router)
             with open(router_file, 'a+', encoding='utf8') as f:
                 f.write(api_text)
@@ -100,7 +100,7 @@ class Config:
             print(f'在文件{router_file}和{schema_file}中生成了相应的代码。')
             return
 
-        # post
+        # POST
         resp_text = schema_resp.replace('__key__', key)
         api_text = api_post.replace('__def__', def_name).replace('__key__', key).replace('__title__', title).replace('__router__', router)
         with open(router_file, 'a+', encoding='utf8') as f:
