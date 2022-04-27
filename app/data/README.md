@@ -16,6 +16,10 @@ cp settings-example.py settings.py
 
 # 根据实际情况修改配置文件
 vim settings.py
+
+# 启动
+# FastAPI文档：https://fastapi.tiangolo.com/
+uvicorn main:app --reload
 ```
 
 ## 3. fas工具使用说明
