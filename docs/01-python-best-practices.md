@@ -282,6 +282,7 @@ doctest_example_test.py:7: AssertionError
 - 指定测试类 `pytest /path/to/test/file.py:TestCase`
 - 指定测试方法 `pytest another.test::TestClass::test_method`
 - 指定测试函数 `pytest /path/to/test/file.py:test_function`
+- 指定测试函数（输出print日志信息） `pytest -s /path/to/test/file.py:test_function`
 
 关于单元测试，我们定义几个**使用规范**：
 
@@ -319,7 +320,7 @@ doctest_example_test.py:18: AssertionError
 
 ```python
 test_data = [
-    (func, [10], {}, 20), 
+    (func, [10], {}, 20),
     (func, [20], {}, 30)
 ]
 
