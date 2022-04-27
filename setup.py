@@ -68,6 +68,7 @@ setup(
                                     os.path.join('data', '*'),
                                     os.path.join('project', '*'),
                                     os.path.join('project', 'common', '*'),
+                                    os.path.join('project', 'static', '*'),
                                     os.path.join('project', 'module', '*'),
                                     os.path.join('project', 'captcha_module', '*'),
                                     ]},

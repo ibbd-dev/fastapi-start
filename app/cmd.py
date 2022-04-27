@@ -123,8 +123,21 @@ def project_init(project_name: str, title: str = '', desc: str = ''):
         shutil.copyfile(join(src_path, filename), join(dst_path, filename))
         if not init_file(join(dst_path, filename), cfg['author'], cfg['email'], replaces=replaces):
             raise Exception('init file error: ' + join(dst_path, filename))
+
+    # 处理静态文件
+    src_path = join(package_path, 'project', 'static')
+    dst_path = join('app', 'static')
+    os.mkdir(dst_path)
+    shutil.copy(join(src_path, 'swagger-ui.css'), dst_path)
+    shutil.copy(join(src_path, 'swagger-ui-bundle.js'), dst_path)
     print('--> ok.')
     print(f'init project: {project_name} ok.')
+
+    # 介绍使用方式
+    print('\nUsage:')
+    print('  cd app')
+    print('  cp settings-example.py settings.py')
+    print('  uvicorn main:app')
 
 
 def clone(uri):
