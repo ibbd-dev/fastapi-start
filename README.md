@@ -79,7 +79,18 @@ rm -rf fastapi_start*
 
 日常使用简单命令即可。
 
-### 3.1 项目日常使用
+### 3.1 快速上手
+
+```sh
+# 创建项目目录
+mkdir project_name
+cd project_name
+
+# 初始化项目
+fas project init --title=测试项目  --desc=这是一个测试项目
+```
+
+### 3.2 项目日常使用
 
 ```sh
 # 创建一个test新项目并初始化
@@ -118,7 +129,7 @@ app.include_router(test_router, prefix="/test", tags=["测试模块"])
 fas file python test
 ```
 
-### 3.2 帮助文档
+### 3.3 帮助文档
 
 ```sh
 # 显示所有帮助文档
@@ -147,7 +158,7 @@ fas clone git@git.ibbd.net:gf/iot-test.git
 fas file readme --title=测试标题 --desc=描述信息
 ```
 
-### 3.3 代码审查
+### 3.4 代码审查
 
 ```sh
 # 帮助文档
