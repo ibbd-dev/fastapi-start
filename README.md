@@ -12,6 +12,7 @@
 - [x] 添加模块（添加内置模块或者全新模块）
 - [x] 生成Python文件（自动加上规范的文件头信息）
 - [x] 替代git clone命令的clone命令，并生成标准化的目录路径
+- [x] 统一接口异常响应信息结构
 - 代码审查工具:
   - [x] 代码风格检测与自动修复（保证代码满足PEP8规范）
   - [x] 代码静态类型检测（自动检测变量的类型，减少低级错误）
@@ -79,7 +80,18 @@ rm -rf fastapi_start*
 
 日常使用简单命令即可。
 
-### 3.1 项目日常使用
+### 3.1 快速上手
+
+```sh
+# 创建项目目录
+mkdir project_name
+cd project_name
+
+# 初始化项目
+fas project init --title=测试项目  --desc=这是一个测试项目
+```
+
+### 3.2 项目日常使用
 
 ```sh
 # 创建一个test新项目并初始化
@@ -118,7 +130,7 @@ app.include_router(test_router, prefix="/test", tags=["测试模块"])
 fas file python test
 ```
 
-### 3.2 帮助文档
+### 3.3 帮助文档
 
 ```sh
 # 显示所有帮助文档
@@ -147,7 +159,7 @@ fas clone git@git.ibbd.net:gf/iot-test.git
 fas file readme --title=测试标题 --desc=描述信息
 ```
 
-### 3.3 代码审查
+### 3.4 代码审查
 
 ```sh
 # 帮助文档
