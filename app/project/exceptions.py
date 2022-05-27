@@ -26,7 +26,6 @@ class status:
     HTTP_401_UNAUTHORIZED = fastapiStatus.HTTP_401_UNAUTHORIZED
     HTTP_403_FORBIDDEN = fastapiStatus.HTTP_403_FORBIDDEN
     HTTP_404_NOT_FOUND = fastapiStatus.HTTP_404_NOT_FOUND
-    HTTP_422_UNPROCESSABLE_ENTITY = fastapiStatus.HTTP_422_UNPROCESSABLE_ENTITY
     # 5XX：来自服务器端错误的响应
     HTTP_500_INTERNAL_SERVER_ERROR = fastapiStatus.HTTP_500_INTERNAL_SERVER_ERROR
     HTTP_504_GATEWAY_TIMEOUT = fastapiStatus.HTTP_504_GATEWAY_TIMEOUT
@@ -54,7 +53,7 @@ def get_status():
              'message': messages[status.__dict__[key]]}
             for key in status.__dict__ if key.startswith('HTTP_')]
     data = sorted(data, key=lambda x: x['code'])
-    print(data, flush=True)
+    # print(data, flush=True)
     # TODO 在这里可以获取上游服务的状态值
     return data
 
