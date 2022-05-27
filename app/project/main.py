@@ -4,18 +4,23 @@
 # Author: __author__
 # Email: __email__
 # Created Time: __created_time__
+from typing import List
 from fastapi import FastAPI
 from fastapi.openapi.docs import (
     get_swagger_ui_html,
     get_swagger_ui_oauth2_redirect_html,
 )
 from fastapi.staticfiles import StaticFiles
+from fastapi.exceptions import RequestValidationError
+from pydantic import ValidationError
+from traceback import format_exc
 # from fastapi import Depends
 # from fastapi.middleware.cors import CORSMiddleware
 
 from settings import DEBUG
 from utils import parse_readme
-from schema import VersionResp
+from schema import VersionResp, StatusCodeResp
+from exceptions import get_status, status, ErrorResponse, InternalException, BaseException
 
 version = "0.5.0"     # 系统版本号
 title, description = parse_readme()
@@ -77,8 +82,46 @@ async def swagger_ui_redirect():
 # app.include_router(captcha_router, prefix="/captcha", tags=["验证码模块"])
 
 
+@app.exception_handler(RequestValidationError)
+async def validation_exception_handler(request, exc: Exception):
+    """请求参数异常"""
+    return ErrorResponse(status.HTTP_403_FORBIDDEN, message='请求参数校验错误', detail=str(exc))
+
+
+@app.exception_handler(ValidationError)
+async def resp_validation_exception_handler(request, exc: Exception):
+    """响应值参数校验异常"""
+    return ErrorResponse(status.HTTP_403_FORBIDDEN, message='响应参数校验错误', detail=str(exc))
+
+
+@app.exception_handler(BaseException)
+async def base_exception_handler(request, exc: BaseException):
+    """捕获自定义异常"""
+    print(format_exc(), flush=True)   # 把异常的详细信息打印到控制台
+    return ErrorResponse(exc.code, message=exc.message, detail=exc.detail)
+
+
 @app.get("/version", summary='获取系统版本号',
          response_model=VersionResp)
 async def version_api():
     """获取系统版本号"""
     return {"version": version}
+
+
+@app.get("/status/code", summary='获取接口的异常状态码及说明',
+         response_model=List[StatusCodeResp])
+async def status_code_api():
+    """获取系统的异常状态值及相应的说明\n
+    该接口通常用于开发阶段，用于查询各个状态值及其意义
+    """
+    return get_status()
+
+
+@app.get("/test/{test_id}", summary='测试接口',
+         response_model=VersionResp)
+async def test_api(test_id: int):
+    """该接口只是用于测试，可以删除"""
+    if test_id == 0:
+        raise InternalException(code=status.HTTP_600_ID_NOT_EXISTED,
+                                message="id为0")
+    return {"aaa": version}
