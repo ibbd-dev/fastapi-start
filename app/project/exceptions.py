@@ -102,7 +102,7 @@ class ErrorResponse(JSONResponse):
     def __init__(self, code: int, message: str = None, detail: Any = None) -> None:
         """
         :param code 响应状态码，取值0-999，若该值大于等于600，则http code会自动重置为500
-        :param message 异常信息
+        :param message 异常信息，如果该值为空，则会默认为code值对应的异常信息
         :param detail 详细的异常信息，通常用于开发者排除定位问题使用
         """
         assert 0 <= code < 1000
