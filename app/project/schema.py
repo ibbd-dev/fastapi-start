@@ -13,3 +13,8 @@ class MessageResp(BaseModel):
 
 class VersionResp(BaseModel):
     version: str = Field(..., title='版本信息', description='版本信息')
+
+
+class StatusCodeResp(BaseModel):
+    code: int = Field(..., title='异常状态值', description='异常状态值')
+    message: str = Field(..., title='异常状态值说明', description='异常状态值说明')
