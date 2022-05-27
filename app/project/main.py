@@ -85,19 +85,20 @@ async def swagger_ui_redirect():
 @app.exception_handler(RequestValidationError)
 async def validation_exception_handler(request, exc: Exception):
     """请求参数异常"""
-    return ErrorResponse(status.HTTP_403_FORBIDDEN, message='请求参数校验错误', detail=str(exc))
+    return ErrorResponse(status.HTTP_400_BAD_REQUEST, message='请求参数校验不通过', detail=str(exc))
 
 
 @app.exception_handler(ValidationError)
 async def resp_validation_exception_handler(request, exc: Exception):
     """响应值参数校验异常"""
-    return ErrorResponse(status.HTTP_403_FORBIDDEN, message='响应参数校验错误', detail=str(exc))
+    return ErrorResponse(status.HTTP_403_FORBIDDEN, message='响应参数校验不通过', detail=str(exc))
 
 
 @app.exception_handler(BaseException)
 async def base_exception_handler(request, exc: BaseException):
     """捕获自定义异常"""
-    print(format_exc(), flush=True)   # 把异常的详细信息打印到控制台
+    # 把异常的详细信息打印到控制台，也可以在此实现将日志写入到对应的文件系统等
+    print(format_exc(), flush=True)
     return ErrorResponse(exc.code, message=exc.message, detail=exc.detail)
 
 
@@ -122,6 +123,7 @@ async def status_code_api():
 async def test_api(test_id: int):
     """该接口只是用于测试，可以删除"""
     if test_id == 0:
+        # 模拟触发某个内部逻辑错误
         raise InternalException(code=status.HTTP_600_ID_NOT_EXISTED,
                                 message="id为0")
     return {"aaa": version}

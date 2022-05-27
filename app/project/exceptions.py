@@ -22,6 +22,7 @@ class status:
     """自定义异常状态码常量，尽量重用http状态码
     """
     # 4XX: 来自客户端错误的响应
+    HTTP_400_BAD_REQUEST = fastapiStatus.HTTP_400_BAD_REQUEST
     HTTP_401_UNAUTHORIZED = fastapiStatus.HTTP_401_UNAUTHORIZED
     HTTP_403_FORBIDDEN = fastapiStatus.HTTP_403_FORBIDDEN
     HTTP_404_NOT_FOUND = fastapiStatus.HTTP_404_NOT_FOUND
@@ -35,10 +36,10 @@ class status:
 # 状态码对应的异常信息(默认)
 messages = {
     # 4XX
+    status.HTTP_400_BAD_REQUEST: '请求参数校验不通过',
     status.HTTP_401_UNAUTHORIZED: '权限校验不通过',
-    status.HTTP_403_FORBIDDEN: '请求参数错误',
+    status.HTTP_403_FORBIDDEN: '响应参数校验不通过',
     status.HTTP_404_NOT_FOUND: '请求的资源不存在',
-    status.HTTP_422_UNPROCESSABLE_ENTITY: '参数校验不通过',
     # 5XX
     status.HTTP_500_INTERNAL_SERVER_ERROR: '服务器内部错误',
     status.HTTP_504_GATEWAY_TIMEOUT: '请求上游服务时超时',
