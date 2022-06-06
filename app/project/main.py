@@ -5,7 +5,7 @@
 # Email: __email__
 # Created Time: __created_time__
 from typing import List
-from fastapi import FastAPI
+from fastapi import FastAPI, HTTPException
 from fastapi.openapi.docs import (
     get_swagger_ui_html,
     get_swagger_ui_oauth2_redirect_html,
@@ -100,6 +100,21 @@ async def base_exception_handler(request, exc: BaseException):
     # 把异常的详细信息打印到控制台，也可以在此实现将日志写入到对应的文件系统等
     print(format_exc(), flush=True)
     return ErrorResponse(exc.code, message=exc.message, detail=exc.detail)
+
+
+@app.exception_handler(HTTPException)
+async def http_exception_handler(request, exc: HTTPException):
+    """捕获FastAPI异常"""
+    print(format_exc(), flush=True)
+    return ErrorResponse(exc.status_code, message=str(exc.detail), detail=exc.detail)
+
+
+@app.exception_handler(Exception)
+async def allexception_handler(request, exc: Exception):
+    """捕获所有其他的异常"""
+    print(format_exc(), flush=True)
+    return ErrorResponse(status.HTTP_500_INTERNAL_SERVER_ERROR,
+                         message='内部异常', detail=str(exc))
 
 
 @app.get("/version", summary='获取系统版本号',

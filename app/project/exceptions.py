@@ -49,7 +49,7 @@ messages = {
 
 def get_status():
     """获取接口状态值列表"""
-    data = [{'code': status.__dict__[key],
+    data = [{'code': status.__dict__[key] + SYSTEM_CODE_BASE,
              'message': messages[status.__dict__[key]]}
             for key in status.__dict__ if key.startswith('HTTP_')]
     data = sorted(data, key=lambda x: x['code'])
