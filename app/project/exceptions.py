@@ -8,14 +8,55 @@
 # Author: __author__
 # Email: __email__
 # Created Time: __created_time__
+from fastapi import FastAPI
 from fastapi import status as fastapiStatus, HTTPException
 from fastapi.responses import JSONResponse
+from fastapi.exceptions import RequestValidationError
+from pydantic import ValidationError
+from traceback import format_exc
 from typing import Any
 from settings import SYSTEM_CODE_BASE
 
 # 状态码基数应该符合这两个条件
 assert SYSTEM_CODE_BASE >= 1000
 assert SYSTEM_CODE_BASE % 1000 == 0
+
+
+def init_exception(app: FastAPI):
+    """初始化异常处理"""
+    @app.exception_handler(RequestValidationError)
+    async def validation_exception_handler(request, exc: Exception):
+        """请求参数异常"""
+        return ErrorResponse(status.HTTP_400_BAD_REQUEST, message='请求参数校验不通过', detail=str(exc))
+
+
+    @app.exception_handler(ValidationError)
+    async def resp_validation_exception_handler(request, exc: Exception):
+        """响应值参数校验异常"""
+        return ErrorResponse(status.HTTP_403_FORBIDDEN, message='响应参数校验不通过', detail=str(exc))
+
+
+    @app.exception_handler(BaseException)
+    async def base_exception_handler(request, exc: BaseException):
+        """捕获自定义异常"""
+        # 把异常的详细信息打印到控制台，也可以在此实现将日志写入到对应的文件系统等
+        print(format_exc(), flush=True)
+        return ErrorResponse(exc.code, message=exc.message, detail=exc.detail)
+
+
+    @app.exception_handler(HTTPException)
+    async def http_exception_handler(request, exc: HTTPException):
+        """捕获FastAPI异常"""
+        print(format_exc(), flush=True)
+        return ErrorResponse(exc.status_code, message=str(exc.detail), detail=exc.detail)
+
+
+    @app.exception_handler(Exception)
+    async def allexception_handler(request, exc: Exception):
+        """捕获所有其他的异常"""
+        print(format_exc(), flush=True)
+        return ErrorResponse(status.HTTP_500_INTERNAL_SERVER_ERROR,
+                            message='内部异常', detail=str(exc))
 
 
 class status:
