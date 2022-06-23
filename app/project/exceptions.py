@@ -105,9 +105,14 @@ class BaseException(HTTPException):
     异常都使用这个类型或者其子类进行抛出，会被统一进行处理和响应。
     对于嵌套的异常处理，如果捕获到这个类型的，则直接raise即可，其他的异常则可以进行进一步的处理。
     """
-    def __init__(self, code: int, message: str, detail: Any = None) -> None:
+    def __init__(self, code: int, message: str = None, detail: Any = None) -> None:
+        """
+        :param code 必须是在在status中定义好的值
+        :param message 异常信息，通常可以展示给前端用户看
+        :param detail 详细异常信息，通常是用于开发排查问题
+        """
         self.code = code
-        self.message = message
+        self.message = message if message else messages[code]
         status_code = code if code < 600 else fastapiStatus.HTTP_500_INTERNAL_SERVER_ERROR
         super().__init__(status_code, detail)
 
@@ -117,12 +122,14 @@ class BaseException(HTTPException):
 
 class InternalException(BaseException):
     """内部错误异常
+    异常时通常使用该类型进行raise
     """
     pass
 
 
 class ErrorResponse(JSONResponse):
     """接口异常响应类型
+    通常只需要在中间件捕获异常的时候使用。
     异常时可以指定一个状态，这个状态码应该尽量重用http标准的状态码，
     对于超过范围的值，可以定义到600到999的范围，大于等于600的时候，
     在响应时会自动重置为500.
@@ -146,7 +153,7 @@ class ErrorResponse(JSONResponse):
     def __init__(self, code: int, message: str = None, detail: Any = None) -> None:
         """
         :param code 响应状态码，取值0-999，若该值大于等于600，则http code会自动重置为500
-        :param message 异常信息，如果该值为空，则会默认为code值对应的异常信息
+        :param message 异常信息，通常是用于展示给用户。如果该值为空，则会默认为code值对应的异常信息
         :param detail 详细的异常信息，通常用于开发者排除定位问题使用
         """
         assert 0 <= code < 1000
