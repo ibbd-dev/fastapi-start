@@ -102,6 +102,8 @@ def get_status():
 class BaseException(HTTPException):
     """自定义异常基类
     程序内部抛出的异常应该给予该基类
+    异常都使用这个类型或者其子类进行抛出，会被统一进行处理和响应。
+    对于嵌套的异常处理，如果捕获到这个类型的，则直接raise即可，其他的异常则可以进行进一步的处理。
     """
     def __init__(self, code: int, message: str, detail: Any = None) -> None:
         self.code = code
@@ -114,7 +116,8 @@ class BaseException(HTTPException):
 
 
 class InternalException(BaseException):
-    """内部错误异常"""
+    """内部错误异常
+    """
     pass
 
 
