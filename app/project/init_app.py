@@ -28,6 +28,7 @@ def init_app(version='1.0', title='接口文档', description='描述文档', de
         description=description,
         version=version,
         docs_url=None,      # 关闭原有的文档地址
+        responses={'default': {"description": "异常相应值见文档说明"}},
     )
     app.mount("/static", StaticFiles(directory="static"), name="static")
 
