@@ -152,15 +152,17 @@ class ErrorResponse(JSONResponse):
     """
     def __init__(self, code: int, message: str = None, detail: Any = None) -> None:
         """
-        :param code 响应状态码，取值0-999，若该值大于等于600，则http code会自动重置为500
+        :param code 响应状态码，正常取值0-999，若该值与1000的余数大于等于600，则http code会自动重置为500。若该值大于等于1000，则该值可能来自上游接口
         :param message 异常信息，通常是用于展示给用户。如果该值为空，则会默认为code值对应的异常信息
         :param detail 详细的异常信息，通常用于开发者排除定位问题使用
         """
-        assert 0 <= code < 1000
+        if code >= 1000:    # 指定的code值，可能来自上游服务的异常
+            super().__init__(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+                             content={"code": code, 'message': message, 'detail': detail})
+            return
         # http的状态码大于600会报错，超过600响应为内部错误
         status_code = code if code < 600 else status.HTTP_500_INTERNAL_SERVER_ERROR
-        if message is None:
-            message = messages[code]
+        message = messages[code] if message is None else message
         super().__init__(status_code=status_code,
                          content={"code": SYSTEM_CODE_BASE + code,
                                   'message': message, 'detail': detail})
