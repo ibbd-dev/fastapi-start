@@ -24,17 +24,18 @@ assert SYSTEM_CODE_BASE % 1000 == 0
 
 def init_exception(app: FastAPI):
     """初始化异常处理"""
+    def get_detail(msg: str) -> str:
+        return '\n'.join(msg.strip().split('\n')[-3:])
+
     @app.exception_handler(RequestValidationError)
     async def validation_exception_handler(request, exc: Exception):
         """请求参数异常"""
         return ErrorResponse(status.HTTP_400_BAD_REQUEST, message='请求参数校验不通过', detail=str(exc))
 
-
     @app.exception_handler(ValidationError)
     async def resp_validation_exception_handler(request, exc: Exception):
         """响应值参数校验异常"""
         return ErrorResponse(status.HTTP_403_FORBIDDEN, message='响应参数校验不通过', detail=str(exc))
-
 
     @app.exception_handler(BaseException)
     async def base_exception_handler(request, exc: BaseException):
@@ -43,20 +44,36 @@ def init_exception(app: FastAPI):
         print(format_exc(), flush=True)
         return ErrorResponse(exc.code, message=exc.message, detail=exc.detail)
 
-
     @app.exception_handler(HTTPException)
     async def http_exception_handler(request, exc: HTTPException):
         """捕获FastAPI异常"""
         print(format_exc(), flush=True)
         return ErrorResponse(exc.status_code, message=str(exc.detail), detail=exc.detail)
 
-
     @app.exception_handler(Exception)
     async def allexception_handler(request, exc: Exception):
-        """捕获所有其他的异常"""
-        print(format_exc(), flush=True)
+        """捕获所有其他的异常
+        """
+        msg = format_exc()
+        print(msg, flush=True)
         return ErrorResponse(status.HTTP_500_INTERNAL_SERVER_ERROR,
-                            message='内部异常', detail=str(exc))
+                            message='内部异常', detail=get_detail(msg))
+
+    @app.exception_handler(KeyError)
+    async def keyerror_handler(request, exc: KeyError):
+        """捕获所有其他的异常"""
+        msg = format_exc()
+        print(msg, flush=True)
+        return ErrorResponse(status.HTTP_500_INTERNAL_SERVER_ERROR,
+                            message='内部异常', detail=get_detail(msg))
+
+    @app.exception_handler(ValueError)
+    async def valueerror_handler(request, exc: ValueError):
+        """捕获所有其他的异常"""
+        msg = format_exc()
+        print(msg, flush=True)
+        return ErrorResponse(status.HTTP_500_INTERNAL_SERVER_ERROR,
+                            message='内部异常', detail=get_detail(msg))
 
 
 class status:

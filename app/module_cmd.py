@@ -111,7 +111,9 @@ def module_new(module_name: str, title: str = '', desc: str = '', src_module: st
     if os.path.isdir(module_name):
         raise Exception(f'module name: {module_name} is existed!')
     cfg = get_config()
-    replaces = {'title': title if title else module_name, 'desc': desc}
+    replaces = {'title': title if title else module_name,
+                'module_name': module_name,
+                'desc': desc,}
     project_path = os.path.dirname(os.path.realpath(__file__))
 
     print('copy and parse app files...')

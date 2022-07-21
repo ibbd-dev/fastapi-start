@@ -68,5 +68,8 @@ async def test_api(test_id: int):
         raise Exception("模拟exception异常")
     elif test_id == 2:
         raise HTTPException("模拟HTTPException异常")
+    elif test_id == 3:
+        a = {'a': 32}
+        a['b']
 
     return {"aaa": test_id}
