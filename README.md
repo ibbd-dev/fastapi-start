@@ -50,8 +50,7 @@ cd fastapi-start
 pip install -r requiresment.txt
 
 # install
-python setup.py build
-python setup.py install
+pip install .
 
 # 测试
 fas
@@ -59,7 +58,7 @@ fas
 
 说明：执行fas命令时如果报错：
 
-```
+```text
 Traceback (most recent call last):
   File "D:\Apps\Anaconda3\Scripts\fas-script.py", line 33, in <module>
     sys.exit(load_entry_point('fastapi-start==0.6.7', 'console_scripts', 'fas')())
@@ -194,7 +193,7 @@ fas check mypy /path/to/filename.py
 
 ## 4. FastAPI项目开发
 
-编码风格遵循[PEP8]((https://alvinzhu.xyz/2017/10/07/python-pep-8/))，接口风格参考[RESTFul](https://mp.weixin.qq.com/s/EOzkOlhrT4pvWIyJ_kfcqw)。
+编码风格遵循[PEP8](https://alvinzhu.xyz/2017/10/07/python-pep-8/)，接口风格参考[RESTFul](https://mp.weixin.qq.com/s/EOzkOlhrT4pvWIyJ_kfcqw)。
 
 重要规则说明：
 
