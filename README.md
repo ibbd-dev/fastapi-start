@@ -13,6 +13,7 @@
 - [x] 生成Python文件（自动加上规范的文件头信息）
 - [x] 替代git clone命令的clone命令，并生成标准化的目录路径
 - [x] 统一接口异常响应信息结构
+- [x] 快速从已有数据库中生成模型文件
 - [ ] S3支持，统一去除文件的本地系统依赖
 - [ ] 规范日志模块
 - 代码审查工具:
@@ -47,7 +48,10 @@ OR
 git clone https://github.com/ibbd-dev/fastapi-start
 cd fastapi-start
 pip install -r requiresment.txt
-easy_install .
+
+# install
+python setup.py build
+python setup.py install
 
 # 测试
 fas
