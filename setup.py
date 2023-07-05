@@ -40,6 +40,7 @@ LONG_DESCRIPTION = """
 - [x] 生成Python文件
 - [x] git路径规范
 - [x] 编码风格审查
+- [x] 快速从已有数据库或者表中生成模型文件
 """.strip()
 
 SHORT_DESCRIPTION = """FastAPI脚手架""".strip()

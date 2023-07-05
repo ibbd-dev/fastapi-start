@@ -11,7 +11,8 @@ from .settings import package_path
 from .utils import init_file, parse_git_uri, shell
 from .config_cmd import get_config
 
-name_pattern = '^[a-z0-9\\-]{2,100}$'
+# 项目名字规范
+name_pattern = '^[a-z][a-z0-9\\-]{2,99}$'
 
 
 class Project:
@@ -31,6 +32,7 @@ class Project:
             fas project init --title=测试项目 --desc=这是一个测试项目
         Args:
             name str: 项目名（目录名），如果不传该值，则自动设置为当前目录名
+               命名规范：支持小写字母、数字、连接符-等，必须以字母开头
             title str: 项目标题（显示在交互式文档中）
             desc str: 项目描述（显示在交互式文档中）
         """
@@ -39,7 +41,7 @@ class Project:
         elif re.match(name_pattern, name):
             print("project name check ok")
         else:
-            raise Exception(f'project name check error: {name_pattern}')
+            raise Exception(f'project name check error: "{name_pattern}"，支持小写字母、数字、连接符-等，必须以字母开头，长度限制3-100个字符')
         project_init(name, title=title, desc=desc)
 
     def create(self, name: str, title: str = '', desc: str = ''):

@@ -5,12 +5,13 @@
 # Created Time: 2021年06月09日 星期三
 import fire
 from .settings import VERSION
-from .cmd import Project
-from .cmd import clone
+from .command import Project
+from .command import clone
 from .config_cmd import Config
 from .file_cmd import File
 from .module_cmd import Module
 from .check_cmd import CodeCheck
+from .database_cmd import Database
 
 
 def version() -> str:
@@ -26,6 +27,7 @@ def main():
         'config': Config(),
         'project': Project(),
         'module': Module(),
+        'database': Database(),
         'file': File(),
         'check': CodeCheck(),
     })
